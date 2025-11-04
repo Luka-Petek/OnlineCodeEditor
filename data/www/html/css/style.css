@@ -1,0 +1,184 @@
+/* Uvoz fonta za moderen videz */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&display=swap');
+
+:root {
+    --color-bg-dark: #0d1117;
+    --color-bg-card: #161b22;
+    --color-primary: #3b82f6;
+    --color-text-light: #e4e6eb;
+    --color-text-subtle: #8b949e;
+    --color-border: #30363d;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--color-bg-dark);
+    color: var(--color-text-light);
+    margin: 0;
+    min-height: 100vh;
+
+    display: grid;
+    /* main je skozi cel ekran, ostalo se avtomatsko prilagaja */
+    grid-template-rows: auto auto 1fr auto;
+}
+
+.staticHeader {
+    width: 100%;
+    background-color: rgba(13, 17, 23, 0.9);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+    top: 0;
+    z-index: 1000;
+
+    /* NOTRANJI GRID: Logo (1f), Gumbi (auto) */
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 0 32px;
+    /* Enako kot max-width center s paddingom */
+    height: 64px;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.kodeLab {
+    color: var(--color-primary);
+}
+
+.prijavaRegistracija {
+    text-decoration: none;
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.prijavaRegistracija:hover {
+    background-color: #2563eb;
+}
+
+.mainHeader {
+    text-align: center;
+    padding: 64px 20px;
+    background-color: var(--color-bg-dark);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.mainHeader h1 {
+    font-size: 48px;
+    font-weight: 900;
+    margin-bottom: 16px;
+    line-height: 1.1;
+}
+
+.mainHeader p {
+    font-size: 20px;
+    color: var(--color-text-subtle);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+main {
+    padding: 48px 20px;
+}
+
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 32px;
+    color: var(--color-text-light);
+}
+
+.cards-grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.card {
+    background-color: var(--color-bg-card);
+    padding: 24px;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    min-width: 200px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(59, 130, 246, 0.2);
+    background-color: #1a222c;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.card-icon {
+    font-size: 32px;
+    margin-right: 12px;
+}
+
+.card-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.card-description {
+    font-size: 14px;
+    color: var(--color-text-subtle);
+}
+
+.card[data-lang="java"] .card-title {
+    color: #f87171;
+}
+
+.card[data-lang="c"] .card-title {
+    color: #60a5fa;
+}
+
+.card[data-lang="python"] .card-title {
+    color: #facc15;
+}
+
+.card[data-lang="javascript"] .card-title {
+    color: #fcd34d;
+}
+
+.card[data-lang="html"] .card-title {
+    color: #fb923c;
+}
+
+footer {
+    background-color: rgba(13, 17, 23, 0.8);
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+    padding: 20px 0;
+    font-size: 14px;
+    color: var(--color-text-subtle);
+}
+
+footer a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}

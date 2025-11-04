@@ -10,7 +10,7 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./data/www/html:/var/www/html/ # Poveže lokalno mapo './data/www' z glavno mapo spletnega strežnika znotraj zabojnika. V to mapo namestimo datoteke spletne aplikacije.
+      - ./data/www:/var/www # Poveže lokalno mapo './data/www' z glavno mapo spletnega strežnika znotraj zabojnika. V to mapo namestimo datoteke spletne aplikacije.
 
   mysql:
     hostname: podatkovna-baza
