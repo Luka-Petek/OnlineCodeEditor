@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html lang="sl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KodeLab - Registracija</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <style>
+        body {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+        }
+
+        main,
+        header,
+        footer {
+            display: grid;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+
+    <header>
+        <div class="staticHeader">
+            <div class="logo">
+                <span class="kodeLab">Kode</span>Lab
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="auth-container">
+            <h2>Ustvarite nov račun</h2>
+            <form action="php/register.php" method="POST">
+
+                <div class="form-group">
+                    <label for="ime">Ime</label>
+                    <input type="text" id="ime" name="ime" required autocomplete="given-name">
+                </div>
+
+                <div class="form-group">
+                    <label for="priimek">Priimek</label>
+                    <input type="text" id="priimek" name="priimek" required autocomplete="family-name">
+                </div>
+
+                <div class="form-group">
+                    <label for="gmail">E-poštni naslov (Gmail)</label>
+                    <input type="email" id="gmail" name="gmail" required autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="geslo">Geslo (vsaj 8 znakov)</label>
+                    <input type="password" id="geslo" name="geslo" required autocomplete="new-password">
+                </div>
+
+                <div class="form-group">
+                    <label for="geslo_ponovi">Ponovite geslo</label>
+                    <input type="password" id="geslo_ponovi" name="geslo_ponovi" required autocomplete="new-password">
+                </div>
+
+                <button type="submit" class="submit-btn">Registracija</button>
+            </form>
+
+            <div>
+                <a href="index.html" class="prijavaRegistracija">Nazaj na glavno stran</a>
+            </div>
+
+            <div class="login-link">
+                Že imate račun? <a href="prijava.html">Prijavite se tukaj</a>.
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            &copy; 2025 KodaLab. Vse pravice pridržane.
+        </div>
+    </footer>
+
+</body>
+
+</html>
