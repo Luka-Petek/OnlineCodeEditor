@@ -2,22 +2,18 @@
 // Zaženi sejo (session) za shranjevanje uporabniških podatkov
 session_start();
 
-// Preveri, če je uporabnik že prijavljen
 if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
-    header("location: ../index.html"); // Preusmeri na nadzorno ploščo
+    header("location: ../index.php");
     exit;
 }
 
-require_once 'db.php'; // Uporabimo že definiran PDO priključek
+require_once 'db.php';
 
-// Inicializacija spremenljivk
 $gmail = $geslo = "";
 $gmail_err = $geslo_err = $login_err = "";
 
-// Preveri, če je obrazec oddan
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // 1. Validacija e-pošte in gesla
     if (empty(trim($_POST["gmail"]))) {
         $gmail_err = "Prosimo, vnesite e-poštni naslov.";
     } else {
@@ -30,16 +26,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $geslo = trim($_POST["geslo"]);
     }
 
-    // 2. Preverjanje podatkov
     if (empty($gmail_err) && empty($geslo_err)) {
         try {
             $pdo = getDatabaseConnection();
             
-            // Pripravi SQL izjavo za pridobitev gesla shranjenega uporabnika
             $sql = "SELECT id, ime, geslo FROM uporabnik WHERE gmail = :gmail";
             $stmt = $pdo->prepare($sql);
             
-            // Izvrši poizvedbo
             $stmt->execute(['gmail' => $gmail]);
 
             if ($stmt->rowCount() == 1) {
@@ -49,32 +42,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 
                 // Preveri geslo
                 if (password_verify($geslo, $hashed_password)) {
-                    // Geslo je pravilno, seveda ustvari sejo!
                     
                     // Nastavi spremenljivke seje
                     $_SESSION["loggedin"] = true;
                     $_SESSION["id"] = $row['id'];
                     $_SESSION["ime"] = $row['ime'];
                     
-                    // Preusmeri uporabnika na varno stran
-                    header("location: ../index.html"); 
+                    header("location: ../index.php"); 
                     exit;
 
-                } else {
-                    // Geslo ni pravilno
+                } 
+                else {
                     $login_err = "Napačno geslo ali e-poštni naslov.";
                 }
-            } else {
-                // Uporabnik z dano e-pošto ne obstaja
+            } 
+            else {
                 $login_err = "Napačno geslo ali e-poštni naslov.";
             }
 
-        } catch (\PDOException $e) {
+        } 
+        catch (\PDOException $e) {
              $login_err = "Napaka pri povezavi z bazo. Prosimo, poskusite znova.";
         }
     }
 
-    // Če prijava ne uspe, prikaži napako
     if (!empty($login_err)) {
         echo "<!DOCTYPE html><html lang='sl'><head><title>Napaka</title><style>body{font-family: sans-serif; background: #1f2937; color: white; padding: 20px;} h2{color:#f87171;}</style></head><body>";
         echo "<h2>Napaka pri prijavi</h2>";
