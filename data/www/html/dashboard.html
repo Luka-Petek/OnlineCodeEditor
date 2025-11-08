@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeLab - Urejevalnik Kode</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/editor.css">
+</head>
+
+<body class="dashboard-layout">
+    
+    <header>
+        <div class="staticHeader">
+            <div class="logo">
+                <span class="kodeLab">Code</span>Lab
+            </div>
+            
+            <div class="action-bar">
+                 <span style="color: var(--color-text-subtle);">Projekt: MojaJavaAplikacija</span>
+                 <button id="runCode">Izvedi Kodo</button>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <a href="index.php" class="prijavaRegistracija">Nazaj na glavno stran</a>
+                <a href="php/logout.php" class="logout-btn">Odjava</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        
+        <div class="file-explorer">
+            <h3>📂 Explorer</h3>
+            <ul class="file-list">
+                <li class="active">Main.java</li>
+                <li>README.md</li>
+                <li>config.json</li>
+            </ul>
+        </div>
+
+        <div class="editor-wrapper">
+            
+            <textarea class="editor-area" placeholder="Začnite pisati kodo... (trenutno še ni shranjevanje)"></textarea>
+
+            <div class="terminal-output">
+                <h4>> Terminal Izhod</h4>
+                <p>Status: Pripravljen na izvajanje Java skript. </p>
+                <p style="color: #ffc107;">Opomba: Zaenkrat samo oblikovanje, logika izvajanja sledi!</p>
+            </div>
+            
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            &copy; 2025 KodaLab. Trenutni jezik: Java
+        </div>
+    </footer>
+    
+    <script>
+        // Placeholder za funkcionalnost gumba "Izvedi Kodo"
+        document.getElementById('runCode').addEventListener('click', () => {
+            const codeContent = document.querySelector('.editor-area').value;
+            alert('Koda pripravljena za izvajanje:\n' + codeContent.substring(0, 100) + '...');
+            
+            // Tukaj bo kasneje prišel AJAX klic na PHP skript, ki sproži Docker-ov Run-Command
+        });
+    </script>
+</body>
+</html>

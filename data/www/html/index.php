@@ -132,16 +132,12 @@ $user_name = $is_logged_in ? htmlspecialchars($_SESSION['ime']) : '';
         document.querySelectorAll('.card').forEach(card => {
             card.addEventListener('click', (e) => {
                 const lang = card.getAttribute('data-lang');
-                // Tukaj bi poslali AJAX zahtevo PHP skriptu (create_project.php)
                 console.log(`Začel se bo projekt v jeziku: ${lang}. Zdaj je potrebno poklicati create_project.php z AJAX.`);
-                
-                // Opomba: Če je uporabnik prijavljen, bi ga morali preusmeriti na urejevalnik.
+
                 <?php if ($is_logged_in): ?>
-                    // Prikaz opozorila, da ustvarjanje projekta ni še implementirano
-                    alert(`Ustvarjanje projekta za jezik ${lang} je uspešno, vendar urejevalnik še ni implementiran.`);
-                    // V produkciji bi tu poklicali create_project.php
+                    alert(`Ustvarjanje projekta za jezik ${lang} je uspešno`);
+                    window.location.href = 'dashboard.html';
                 <?php else: ?>
-                    // Če ni prijavljen, ga preusmeri na prijavo
                     alert('Za ustvarjanje novega projekta se morate prijaviti.');
                     window.location.href = 'prijava.html';
                 <?php endif; ?>
