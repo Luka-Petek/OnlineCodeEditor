@@ -1,5 +1,4 @@
 <?php
-
 function getDatabaseConnection() {
     $host = 'podatkovna-baza';
     $user = 'root';

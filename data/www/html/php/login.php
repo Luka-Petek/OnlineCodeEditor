@@ -29,40 +29,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($gmail_err) && empty($geslo_err)) {
         try {
             $pdo = getDatabaseConnection();
-            
+
             $sql = "SELECT id, ime, geslo FROM uporabnik WHERE gmail = :gmail";
             $stmt = $pdo->prepare($sql);
-            
+
             $stmt->execute(['gmail' => $gmail]);
 
             if ($stmt->rowCount() == 1) {
-                // E-pošta obstaja, pridobi podatke
                 $row = $stmt->fetch();
                 $hashed_password = $row['geslo'];
-                
+
                 // Preveri geslo
                 if (password_verify($geslo, $hashed_password)) {
-                    
-                    // Nastavi spremenljivke seje
+
                     $_SESSION["loggedin"] = true;
-                    $_SESSION["id"] = $row['id'];
+                    $_SESSION["user_id"] = $row['id'];
                     $_SESSION["ime"] = $row['ime'];
-                    
-                    header("location: ../index.php"); 
+
+                    header("location: ../index.php");
                     exit;
 
-                } 
-                else {
+                } else {
                     $login_err = "Napačno geslo ali e-poštni naslov.";
                 }
-            } 
-            else {
+            } else {
                 $login_err = "Napačno geslo ali e-poštni naslov.";
             }
 
-        } 
-        catch (\PDOException $e) {
-             $login_err = "Napaka pri povezavi z bazo. Prosimo, poskusite znova.";
+        } catch (\PDOException $e) {
+            $login_err = "Napaka pri povezavi z bazo. Prosimo, poskusite znova.";
         }
     }
 
@@ -70,11 +65,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<!DOCTYPE html><html lang='sl'><head><title>Napaka</title><style>body{font-family: sans-serif; background: #1f2937; color: white; padding: 20px;} h2{color:#f87171;}</style></head><body>";
         echo "<h2>Napaka pri prijavi</h2>";
         echo "<p style='color: #f87171;'>" . htmlspecialchars($login_err) . "</p>";
-        
+
         // Prikaz morebitnih napak pri validaciji
-        if (!empty($gmail_err)) echo "<p style='color: #f87171;'>E-pošta: " . $gmail_err . "</p>";
-        if (!empty($geslo_err)) echo "<p style='color: #f87171;'>Geslo: " . $geslo_err . "</p>";
-        
+        if (!empty($gmail_err))
+            echo "<p style='color: #f87171;'>E-pošta: " . $gmail_err . "</p>";
+        if (!empty($geslo_err))
+            echo "<p style='color: #f87171;'>Geslo: " . $geslo_err . "</p>";
+
         echo "<p><a style='color:#3b82f6;' href='../html/prijava.html'>Poskusi znova</a></p>";
         echo "</body></html>";
     }

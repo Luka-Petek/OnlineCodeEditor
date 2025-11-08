@@ -35,6 +35,7 @@ CREATE TABLE projekt(
     id INT PRIMARY KEY AUTO_INCREMENT,
     imeProjekta VARCHAR(255) NOT NULL,
     opis TEXT,
+    jezik VARCHAR(50) NOT NULL,
     datumNastanka DATETIME DEFAULT CURRENT_TIMESTAMP,
     FKuporabnik INT NOT NULL,
 
@@ -48,7 +49,6 @@ CREATE TABLE datoteka(
     
     imeDatoteke VARCHAR(255) NOT NULL,
     potDatoteke VARCHAR(512) NOT NULL UNIQUE,
-    jezik VARCHAR(50) NOT NULL,
     jeMain BOOLEAN DEFAULT FALSE,
     datumNastanka DATETIME DEFAULT CURRENT_TIMESTAMP,
 

@@ -49,13 +49,11 @@ $user_name = $is_logged_in ? htmlspecialchars($_SESSION['ime']) : '';
                 </button>
 
                 <?php if ($is_logged_in): ?>
-                    <!-- PRIJAVLJEN UPORABNIK -->
                     <span class="greeting-message">Pozdravljen, <?php echo $user_name; ?>!</span>
                     <a href="php/odjava.php" class="logout-btn">Odjava</a>
                 <?php else: ?>
-                    <!-- NI PRIJAVLJEN -->
                     <a href="prijava.html" class="prijavaRegistracija">Prijava</a>
-                <a href="registracija.html" class="prijavaRegistracija">Registracija</a>
+                    <a href="registracija.html" class="prijavaRegistracija">Registracija</a>
                 <?php endif; ?>
             </div>
         </div>
@@ -125,22 +123,19 @@ $user_name = $is_logged_in ? htmlspecialchars($_SESSION['ime']) : '';
     </footer>
     
     <script>
-        document.getElementById('themeToggle').addEventListener('click', () => {
-            console.log("Preklop teme (zaenkrat ni implementiran)");
-        });
-
         document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('click', (e) => {
-                const lang = card.getAttribute('data-lang');
-                console.log(`Začel se bo projekt v jeziku: ${lang}. Zdaj je potrebno poklicati create_project.php z AJAX.`);
+            card.addEventListener('click', () => {
+                const lang = card.dataset.lang;
+                
+                const isLoggedIn = <?= $is_logged_in ? 'true' : 'false' ?>;
 
-                <?php if ($is_logged_in): ?>
-                    alert(`Ustvarjanje projekta za jezik ${lang} je uspešno`);
-                    window.location.href = 'dashboard.html';
-                <?php else: ?>
+                if (isLoggedIn) {
+                    window.location.href = 'createProjectHTML.php?jezik=' + lang;
+                } 
+                else {
                     alert('Za ustvarjanje novega projekta se morate prijaviti.');
                     window.location.href = 'prijava.html';
-                <?php endif; ?>
+                }
             });
         });
     </script>
