@@ -65,7 +65,7 @@ if ($jezik === 'neznan') {
                 </form>
 
                 <p class="mt-4">
-                    <a href="index.php" class="link-secondary">Prekliči in nazaj na izbiro jezika</a>
+                    <a href="index.php" class="submit-btn">Prekliči in nazaj na izbiro jezika</a>
                 </p>
 
             </div>

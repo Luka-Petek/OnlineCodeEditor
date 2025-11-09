@@ -4,67 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodeLab - Urejevalnik Kode</title>
-    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/editor.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/theme/darcula.min.css">
 </head>
 
-<body class="dashboard-layout">
-    
-    <header>
-        <div class="staticHeader">
-            <div class="logo">
-                <span class="kodeLab">Code</span>Lab
-            </div>
-            
-            <div class="action-bar">
-                 <span style="color: var(--color-text-subtle);">Projekt: MojaJavaAplikacija</span>
-                 <button id="runCode">Izvedi Kodo</button>
-            </div>
+<body>
 
-            <div style="display: flex; align-items: center; gap: 16px;">
-                <a href="index.php" class="prijavaRegistracija">Nazaj na glavno stran</a>
-                <a href="php/logout.php" class="logout-btn">Odjava</a>
-            </div>
+    <header class="header">
+        <div class="project-info">
+            <h1 style="font-size: 1.25rem; font-weight: 700;">CodeLab</h1>
+            <span class="project-badge">
+                Projekt: Java Projekt (Jezik: Java)
+            </span>
+        </div>
+        <div class="controls">
+            <button id="runButton" class="btn btn-primary">
+                Zaženi Kodo
+            </button>
+            <button class="btn btn-secondary">
+                Shrani
+            </button>
+            <span style="font-size: 0.875rem; color: var(--color-text-secondary);">Uporabnik</span>
         </div>
     </header>
 
-    <main>
+    <main class="main-content">
         
-        <div class="file-explorer">
-            <h3>📂 Explorer</h3>
-            <ul class="file-list">
-                <li class="active">Main.java</li>
-                <li>README.md</li>
-                <li>config.json</li>
-            </ul>
+        <div class="editor-container">
+            <!-- Textarea, ki jo CodeMirror pretvori v urejevalnik -->
+            <textarea id="codeEditor" name="code">
+class Main {
+    public static void main(String[] args) {
+        // Ta koda je zdaj v celoti stilizirana s klasičnim CSS-om!
+        System.out.println("Koda pripravljena za izvajanje.");
+    }
+}
+            </textarea>
         </div>
 
-        <div class="editor-wrapper">
-            
-            <textarea class="editor-area" placeholder="Začnite pisati kodo... (trenutno še ni shranjevanje)"></textarea>
+        <div class="console-container">
+            <h2 class="console-header">Konzola / Izhod</h2>
 
-            <div class="terminal-output">
-                <h4>> Terminal Izhod</h4>
-                <p>Status: Pripravljen na izvajanje Java skript. </p>
-                <p style="color: #ffc107;">Opomba: Zaenkrat samo oblikovanje, logika izvajanja sledi!</p>
-            </div>
-            
+            <pre id="output-container">
+                // Tukaj bo prikazan izhod kode.
+                Pritisnite "Zaženi Kodo" za simulacijo izvedbe.
+            </pre>
         </div>
     </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/clike/clike.min.js"></script> 
 
-    <footer>
-        <div class="container">
-            &copy; 2025 KodaLab. Trenutni jezik: Java
-        </div>
-    </footer>
-    
     <script>
-        // Placeholder za funkcionalnost gumba "Izvedi Kodo"
-        document.getElementById('runCode').addEventListener('click', () => {
-            const codeContent = document.querySelector('.editor-area').value;
-            alert('Koda pripravljena za izvajanje:\n' + codeContent.substring(0, 100) + '...');
+        const editor = CodeMirror.fromTextArea(document.getElementById('codeEditor'), {
+            lineNumbers: true, 
+            mode: "text/x-java", 
+            theme: "darcula", 
+            indentUnit: 4,
+            tabSize: 4,
+            lineWrapping: true,
+        });
+
+        document.getElementById('runButton').addEventListener('click', () => {
+            const code = editor.getValue();
+            const outputContainer = document.getElementById('output-container');
             
-            // Tukaj bo kasneje prišel AJAX klic na PHP skript, ki sproži Docker-ov Run-Command
+            // SIMULACIJA IZHODA
+            outputContainer.textContent = `
+                [SIMULACIJA REZULTATA]
+                Koda poslana v izvajalnik.
+
+                =================================
+                Program Output:
+                Koda pripravljena za izvajanje.
+                (To je simulacija izpisa s Pure CSS postavitvijo)
+                
+                Čas izvajanja: 1,5 ms.
+            `;
         });
     </script>
 </body>
