@@ -10,6 +10,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_
 $fk_uporabnik = $_SESSION['user_id'];
 $db = getDatabaseConnection();
 
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $ime_projekta = trim($_POST['imeProjekta'] ?? '');
@@ -26,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($napake)) {
+
         try {
             $sql = "INSERT INTO projekt (imeProjekta, opis, jezik, FKuporabnik) 
                     VALUES (:imeProjekta, :opis, :jezik, :fk_uporabnik)";
@@ -40,12 +42,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute();
             
             $nov_projekt_id = $db->lastInsertId();
+            
             header("Location: ../dashboard.html?id=" . $nov_projekt_id);
             exit;
 
         } 
         catch (PDOException $e) {
-            if ($e->getCode() == '23000') {
+            if ($e->getCode() == '23000') { 
                 $napake[] = "Projekt z imenom '$ime_projekta' za vaš račun že obstaja. Prosimo, izberite drugo ime.";
             } else {
                 $napake[] = "Napaka pri shranjevanju projekta: " . $e->getMessage();
@@ -53,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
+    // Ob napaki
     if (!empty($napake)) {
         $_SESSION['error_message'] = implode('<br>', $napake);
         

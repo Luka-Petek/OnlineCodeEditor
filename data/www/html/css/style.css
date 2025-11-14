@@ -201,7 +201,7 @@ footer a:hover {
 .auth-container h2 {
     text-align: center;
     color: var(--color-text-light);
-    margin-bottom: 5px; 
+    margin-bottom: 5px;
     font-weight: 700;
 }
 
@@ -213,7 +213,7 @@ footer a:hover {
 .form-group label {
     font-weight: 500;
     margin-bottom: 6px;
-    color: var(--color-secondary); 
+    color: var(--color-secondary);
     font-size: 0.95rem;
 }
 
@@ -224,7 +224,7 @@ footer a:hover {
     border-radius: 6px;
     font-size: 1em;
     box-sizing: border-box;
-    background-color: var(--color-bg-input); 
+    background-color: var(--color-bg-input);
     color: var(--color-text-light);
     transition: border-color 0.3s, box-shadow 0.3s;
 }
@@ -232,7 +232,7 @@ footer a:hover {
 .form-group input:focus {
     border-color: var(--color-primary);
     outline: none;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3); 
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
 }
 
 .submit-btn {
@@ -248,7 +248,8 @@ footer a:hover {
     letter-spacing: 0.5px;
     transition: background-color 0.2s, transform 0.1s;
     text-transform: uppercase;
-    margin-top: 10px; /* Razmik od zadnjega inputa */
+    margin-top: 10px;
+    /* Razmik od zadnjega inputa */
 }
 
 .submit-btn:hover {
@@ -271,4 +272,116 @@ footer a:hover {
 
 .login-link a:hover {
     text-decoration: underline;
+}
+
+/* Navigacija za prijavljene uporabnike */
+.main-nav ul {
+    text-align: center;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 1.5rem;
+    /* Razmik med povezavami */
+}
+
+.nav-link {
+    color: var(--color-text-light);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.5rem 0;
+    transition: color 0.2s, border-bottom 0.2s;
+    border-bottom: 2px solid transparent;
+    /* Za hover učinek */
+}
+
+.nav-link:hover {
+    color: var(--color-primary);
+    border-bottom: 2px solid var(--color-primary);
+}
+
+/* Navigacija za prijavljene uporabnike */
+.main-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.nav-link {
+    color: var(--color-text-light);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    transition: color 0.2s, border-bottom 0.2s;
+    border-bottom: 2px solid transparent;
+}
+
+.nav-link:hover {
+    color: var(--color-primary);
+    border-bottom: 2px solid var(--color-primary);
+}
+
+@media (max-width: 768px) {
+
+    /* Spremeni obnašanje glavne glave */
+    .staticHeader {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    /* Postavi navigacijo na dno glave in jo raztegni čez celo širino */
+    .main-nav {
+        order: 3;
+        flex-basis: 100%;
+        text-align: center;
+    }
+
+    /* Centriraj elemente v navigaciji */
+    .main-nav ul {
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    /* Prilagodi vrstni red ostalih elementov */
+    .header-controls {
+        order: 2;
+        gap: 0.75rem;
+    }
+
+    .logo {
+        order: 1;
+        flex-grow: 1;
+        text-align: left;
+    }
+}
+
+/* GREETING MESSAGE */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&display=swap');
+
+.greeting-message {
+    color: var(--color-primary);
+    font-weight: 500;
+    padding: 8px 0;
+    white-space: nowrap;
+}
+
+.logout-btn {
+    background-color: var(--color-danger, #ef4444);
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.logout-btn:hover {
+    background-color: #dc2626;
 }
