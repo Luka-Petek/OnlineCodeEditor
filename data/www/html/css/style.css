@@ -56,7 +56,9 @@ body {
     color: var(--color-text-light);
     padding: 8px 16px;
     border-radius: 8px;
-    font-weight: 500;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
     transition: background-color 0.2s;
 }
 
@@ -205,6 +207,12 @@ footer a:hover {
     font-weight: 700;
 }
 
+.auth-container > a {
+    /* To bo centriralo vso inline vsebino (kot je vaša <a> povezava) */
+    text-align: center;
+    justify-content: center;
+}
+
 .form-group {
     display: flex;
     flex-direction: column;
@@ -286,8 +294,8 @@ footer a:hover {
     color: var(--color-text-light);
     text-decoration: none;
     font-weight: 500;
-    font-size: 1rem;
-    padding: 0.5rem 0;
+    font-size: 2rem;
+    padding: 0.5rem 0.5rem;
     transition: color 0.2s, border-bottom 0.2s;
     border-bottom: 2px solid transparent;
 }
@@ -341,9 +349,6 @@ footer a:hover {
     .main-nav ul {
         justify-content: center;
         gap: 1rem;
-    }
-    .main-nav li a{
-        font-size: 14px;
     }
 
     /* Prilagodi vrstni red ostalih elementov */
