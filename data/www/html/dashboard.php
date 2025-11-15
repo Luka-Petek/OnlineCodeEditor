@@ -1,0 +1,171 @@
+<?php
+session_start();
+require_once 'php/vrniProjekte.php'; 
+
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+    header("location: prijava.html");
+    exit;
+}
+
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    header("location: projekti.php");
+    exit;
+}
+
+$projekt_id = (int)$_GET['id'];
+$fk_uporabnik = $_SESSION['user_id'];
+$user_name = htmlspecialchars(string: $_SESSION['ime'] ?? 'Uporabnik');
+
+$projekt = vrniProjektPID($projekt_id);
+
+if (!$projekt) {
+    header("location: projekti.php?error=access_denied");
+    exit;
+}
+
+$jezik = strtolower($projekt['jezik'] ?? 'default'); 
+$zacetna_vsebina_raw = $projekt['vsebina'] ?? ''; 
+
+if (empty(trim($zacetna_vsebina_raw))) {
+    switch ($jezik) {
+        case 'java':
+            $zacetna_vsebina_raw = "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Pozdravljen, Java!\");\n    }\n}";
+            break;
+        case 'python':
+            $zacetna_vsebina_raw = "def main():\n    print(\"Pozdravljen, Python!\")\n\nif __name__ == \"__main__\":\n    main()";
+            break;
+        case 'c':
+            $zacetna_vsebina_raw = "#include <stdio.h>\n\nint main() {\n    printf(\"Pozdravljen, C!\\n\");\n    return 0;\n}";
+            break;
+        case 'javascript':
+            $zacetna_vsebina_raw = "console.log('Pozdravljen, JavaScript!');";
+            break;
+        case 'html':
+            $project_title = htmlspecialchars($projekt['imeProjekta'] ?? 'Projekt');
+            $zacetna_vsebina_raw = "<!DOCTYPE html>\n<html>\n<head>\n    <title>" . $project_title . "</title>\n</head>\n<body>\n    <h1>Pozdravljen, HTML!</h1>\n</body>\n</html>";
+            break;
+        default:
+            $zacetna_vsebina_raw = "// Jezik ni prepoznan. Vnesite svojo kodo.";
+    }
+}
+$zacetna_vsebina = htmlspecialchars($zacetna_vsebina_raw);
+
+$codemirror_mode = 'clike'; 
+switch ($jezik) {
+    case 'python':
+        $codemirror_mode = 'python';
+        $mode_script = 'mode/python/python.min.js';
+        break;
+    case 'javascript':
+        $codemirror_mode = 'javascript';
+        $mode_script = 'mode/javascript/javascript.min.js';
+        break;
+    case 'html':
+        $codemirror_mode = 'xml'; 
+        $mode_script = 'mode/xml/xml.min.js';
+        break;
+    case 'java':
+    case 'c':
+        $codemirror_mode = 'text/x-java';
+        $mode_script = 'mode/clike/clike.min.js';
+        break;
+    default:
+        $mode_script = 'mode/clike/clike.min.js';
+        break;
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeLab - Urejevalnik Kode - <?php echo htmlspecialchars($projekt['imeProjekta'] ?? 'Neznan Projekt'); ?></title>
+    <link rel="stylesheet" href="css/editor.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/theme/darcula.min.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="project-info">
+            <h1 style="font-size: 1.25rem; font-weight: 700;">
+                <span class="kodeLab">Code</span>Lab
+            </h1>
+            <span class="project-badge">
+                Projekt: **<?php echo htmlspecialchars($projekt['imeProjekta'] ?? 'Neznan Projekt'); ?>** (<?php echo strtoupper($projekt['jezik'] ?? 'NEZNANO'); ?>)
+            </span>
+        </div>
+        <div class="controls">
+            <button id="runButton" class="btn btn-primary">
+                Zaženi Kodo
+            </button>
+            <button class="btn btn-secondary">
+                Shrani
+            </button>
+            <span style="font-size: 0.875rem; color: var(--color-text-secondary);"><?php echo $user_name; ?></span>
+            <a href="php/odjava.php" class="logout-btn">Odjava</a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        
+        <div class="editor-container">
+            <textarea id="codeEditor" name="code"><?php echo $zacetna_vsebina; ?></textarea>
+        </div>
+
+        <div class="console-container">
+            <h2 class="console-header">Konzola / Izhod</h2>
+
+            <pre id="output-container">
+// Tukaj bo prikazan izhod kode.
+Pritisnite "Zaženi Kodo" za simulacijo izvedbe.
+            </pre>
+        </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/<?php echo $mode_script; ?>"></script> 
+    <?php if ($jezik === 'html'): ?>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/htmlmixed/htmlmixed.min.js"></script>
+    <?php endif; ?>
+
+    <script>
+        const codeMirrorMode = '<?php echo $codemirror_mode === 'xml' ? 'htmlmixed' : $codemirror_mode; ?>';
+
+        const editor = CodeMirror.fromTextArea(document.getElementById('codeEditor'), {
+            lineNumbers: true,
+            mode: codeMirrorMode,
+            theme: "darcula",
+            indentUnit: 4,
+            tabSize: 4,
+            lineWrapping: true,
+        });
+
+        document.getElementById('runButton').addEventListener('click', () => {
+            const code = editor.getValue();
+            const outputContainer = document.getElementById('output-container');
+            
+            outputContainer.textContent = `Pripravljam izvajanje ${codeMirrorMode}...`;
+            
+            setTimeout(() => {
+                 outputContainer.textContent = `
+[SIMULACIJA REZULTATA - Jezik: <?php echo strtoupper($projekt['jezik'] ?? 'NEZNANO'); ?>]
+Koda poslana v izvajalnik (<?php echo htmlspecialchars($projekt['imeProjekta'] ?? 'Neznan Projekt'); ?>).
+
+=================================
+Program Output:
+Uspešno izvedeno! (Simulacija)
+Prikazana je koda za <?php echo strtoupper($projekt['jezik'] ?? 'NEZNANO'); ?>.
+ 
+Čas izvajanja: 125 ms.
+            `;
+            }, 800);
+        });
+    </script>
+</body>
+</html>

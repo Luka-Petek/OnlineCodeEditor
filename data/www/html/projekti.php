@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'php/db.php'; 
+require_once 'php/vrniProjekte.php'; 
 
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("location: prijava.html");
@@ -13,29 +13,7 @@ $fk_uporabnik = $_SESSION['user_id'];
 $theme = isset($_COOKIE['theme']) ? $_COOKIE['theme'] : 'dark';
 $theme_icon = ($theme === 'dark') ? 'sun' : 'moon';
 
-// PRIDOBIVANJE PROJEKTOV IZ BAZE
-$projekti = [];
-$error_message = null;
-
-try {
-    $db = getDatabaseConnection();
-
-    $sql = "SELECT id, imeProjekta, opis, jezik, datumNastanka 
-            FROM projekt 
-            WHERE FKuporabnik = :fk_uporabnik 
-            ORDER BY datumNastanka DESC";
-            
-    $stmt = $db->prepare($sql);
-    $stmt->bindParam(':fk_uporabnik', $fk_uporabnik, PDO::PARAM_INT); // Predpostavljamo, da je user_id INTEGER
-    $stmt->execute();
-    $projekti = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-} catch (\PDOException $e) {
-    error_log("Napaka pri pridobivanju projektov: " . $e->getMessage());
-    $error_message = "Prišlo je do sistemske napake pri nalaganju vaših projektov.";
-} catch (\Exception $e) {
-     $error_message = "Napaka: Ne morem se povezati z bazo podatkov.";
-}
+$projekti = vrniProjekteUID($fk_uporabnik);
 function getLangStyle($jezik) {
     $jezik = strtolower($jezik);
     switch ($jezik) {

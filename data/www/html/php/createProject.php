@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             $nov_projekt_id = $db->lastInsertId();
             
-            header("Location: ../dashboard.html?id=" . $nov_projekt_id);
+            header("Location: ../dashboard.php?id=" . $nov_projekt_id);
             exit;
 
         } 
