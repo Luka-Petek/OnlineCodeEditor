@@ -289,7 +289,7 @@ footer a:hover {
     justify-content: center;
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin-top: 2%;
     gap: 1.5rem;
 }
 
@@ -298,7 +298,6 @@ footer a:hover {
     text-decoration: none;
     font-weight: 500;
     font-size: 1.5rem;
-    margin-top: 2%;
     padding: 0.5rem 0.5rem;
     transition: color 0.2s, border-bottom 0.2s;
     border-bottom: 2px solid transparent;

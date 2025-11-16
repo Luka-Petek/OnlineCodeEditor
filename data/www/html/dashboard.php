@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once 'php/vrniProjekte.php'; 
+require_once 'php/vrniProjekte.php';
 
-if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("location: prijava.html");
     exit;
 }
@@ -12,7 +12,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     exit;
 }
 
-$projekt_id = (int)$_GET['id'];
+$projekt_id = (int) $_GET['id'];
 $fk_uporabnik = $_SESSION['user_id'];
 $user_name = htmlspecialchars(string: $_SESSION['ime'] ?? 'Uporabnik');
 
@@ -23,8 +23,8 @@ if (!$projekt) {
     exit;
 }
 
-$jezik = strtolower($projekt['jezik'] ?? 'default'); 
-$zacetna_vsebina_raw = $projekt['vsebina'] ?? ''; 
+$jezik = strtolower($projekt['jezik'] ?? 'default');
+$zacetna_vsebina_raw = $projekt['vsebina'] ?? '';
 
 if (empty(trim($zacetna_vsebina_raw))) {
     switch ($jezik) {
@@ -50,7 +50,7 @@ if (empty(trim($zacetna_vsebina_raw))) {
 }
 $zacetna_vsebina = htmlspecialchars($zacetna_vsebina_raw);
 
-$codemirror_mode = 'clike'; 
+$codemirror_mode = 'clike';
 switch ($jezik) {
     case 'python':
         $codemirror_mode = 'python';
@@ -61,7 +61,7 @@ switch ($jezik) {
         $mode_script = 'mode/javascript/javascript.min.js';
         break;
     case 'html':
-        $codemirror_mode = 'xml'; 
+        $codemirror_mode = 'xml';
         $mode_script = 'mode/xml/xml.min.js';
         break;
     case 'java':
@@ -78,10 +78,12 @@ switch ($jezik) {
 
 <!DOCTYPE html>
 <html lang="sl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeLab - Urejevalnik Kode - <?php echo htmlspecialchars($projekt['imeProjekta'] ?? 'Neznan Projekt'); ?></title>
+    <title>CodeLab - Urejevalnik Kode - <?php echo htmlspecialchars($projekt['imeProjekta'] ?? 'Neznan Projekt'); ?>
+    </title>
     <link rel="stylesheet" href="css/editor.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.css">
@@ -96,14 +98,15 @@ switch ($jezik) {
                 <span class="kodeLab">Code</span>Lab
             </h1>
             <span class="project-badge">
-                Projekt: **<?php echo htmlspecialchars($projekt['imeProjekta'] ?? 'Neznan Projekt'); ?>** (<?php echo strtoupper($projekt['jezik'] ?? 'NEZNANO'); ?>)
+                Projekt: **<?php echo htmlspecialchars($projekt['imeProjekta'] ?? 'Neznan Projekt'); ?>**
+                (<?php echo strtoupper($projekt['jezik'] ?? 'NEZNANO'); ?>)
             </span>
         </div>
         <div class="controls">
             <button id="runButton" class="btn btn-primary">
                 Zaženi Kodo
             </button>
-            <button class="btn btn-secondary">
+            <button id="saveButton" class="btn btn-secondary">
                 Shrani
             </button>
             <span style="font-size: 0.875rem; color: var(--color-text-secondary);"><?php echo $user_name; ?></span>
@@ -112,7 +115,7 @@ switch ($jezik) {
     </header>
 
     <main class="main-content">
-        
+
         <div class="editor-container">
             <textarea id="codeEditor" name="code"><?php echo $zacetna_vsebina; ?></textarea>
         </div>
@@ -127,11 +130,11 @@ Pritisnite "Zaženi Kodo" za simulacijo izvedbe.
         </div>
     </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/<?php echo $mode_script; ?>"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/<?php echo $mode_script; ?>"></script>
     <?php if ($jezik === 'html'): ?>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/css/css.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/javascript/javascript.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/htmlmixed/htmlmixed.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/css/css.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/javascript/javascript.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/mode/htmlmixed/htmlmixed.min.js"></script>
     <?php endif; ?>
 
     <script>
@@ -149,11 +152,11 @@ Pritisnite "Zaženi Kodo" za simulacijo izvedbe.
         document.getElementById('runButton').addEventListener('click', () => {
             const code = editor.getValue();
             const outputContainer = document.getElementById('output-container');
-            
+
             outputContainer.textContent = `Pripravljam izvajanje ${codeMirrorMode}...`;
-            
+
             setTimeout(() => {
-                 outputContainer.textContent = `
+                outputContainer.textContent = `
 [SIMULACIJA REZULTATA - Jezik: <?php echo strtoupper($projekt['jezik'] ?? 'NEZNANO'); ?>]
 Koda poslana v izvajalnik (<?php echo htmlspecialchars($projekt['imeProjekta'] ?? 'Neznan Projekt'); ?>).
 
@@ -166,6 +169,50 @@ Prikazana je koda za <?php echo strtoupper($projekt['jezik'] ?? 'NEZNANO'); ?>.
             `;
             }, 800);
         });
+
+        //SHRANJEVANJE DATOTEKE
+
+        const PROJEKT_ID = <?php echo json_encode($projekt_id); ?>;
+        const JEZIK = '<?php echo $jezik; ?>';
+        const SAVE_URL = 'php/shraniKodo.php';
+
+        document.getElementById('saveButton').addEventListener('click', () => {
+            const koda = editor.getValue();
+            const outputContainer = document.getElementById('output-container');
+
+            outputContainer.textContent = "Shranjujem kodo...";
+
+            fetch(SAVE_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    projektId: PROJEKT_ID,
+                    koda: koda,
+                    jezik: JEZIK
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(error => { throw new Error(error.message || `Napaka strežnika: ${response.status}`); });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        outputContainer.textContent = `Shranjevanje uspešno! (${data.message})`;
+                    } else {
+                        outputContainer.textContent = `Napaka pri shranjevanju: ${data.message}`;
+                        console.error("Napaka:", data.message);
+                    }
+                })
+                .catch(error => {
+                    outputContainer.textContent = `Napaka: ${error.message}.`;
+                    console.error('Fetch Error:', error);
+                });
+        });
     </script>
 </body>
+
 </html>
