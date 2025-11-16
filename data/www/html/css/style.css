@@ -119,6 +119,9 @@ main {
     cursor: pointer;
     min-width: 200px;
 }
+.card, .card h3, .card p, .card span {
+    text-decoration: none !important; 
+}
 
 .card:hover {
     transform: translateY(-5px);
@@ -294,7 +297,8 @@ footer a:hover {
     color: var(--color-text-light);
     text-decoration: none;
     font-weight: 500;
-    font-size: 2rem;
+    font-size: 1.5rem;
+    margin-top: 2%;
     padding: 0.5rem 0.5rem;
     transition: color 0.2s, border-bottom 0.2s;
     border-bottom: 2px solid transparent;

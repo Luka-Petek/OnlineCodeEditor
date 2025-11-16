@@ -1,42 +1,32 @@
-version: '3.8'
 services:
 
-  php-fpm:
-    build: 
+  spletni-streznik:
+    build: # Namesto uporabe obstoječe Docker slike, bomo sliko zgradili na podlagi spodnjih navodil, kjer bomo osnovni sliki php:apache dodali še razširitve za povezovanje s podatkovno bazo
       context: .
       dockerfile_inline: |
-        FROM php:fpm
+        FROM php:apache
         RUN docker-php-ext-install pdo pdo_mysql
-    restart: unless-stopped
-    volumes:
-      - ./data/www:/var/www
-
-  spletni-streznik:
-    image: nginx:latest
     restart: unless-stopped
     ports:
       - "8000:80"
     volumes:
-      - ./data/www:/var/www:ro
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-    depends_on:
-      - php-fpm
+      - ./data/www:/var/www # Poveže lokalno mapo './data/www' z glavno mapo spletnega strežnika znotraj zabojnika. V to mapo namestimo datoteke spletne aplikacije.
 
   mysql:
     hostname: podatkovna-baza
-    image: mysql:latest
+    image: mysql:latest # Docker slika, ki se prenese iz https://hub.docker.com/_/mysql. Lahko uporabite različico, npr. mysql:8.0.41, ali pa 'mysql:latest' za najnovejšo različico
     restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=root
     volumes:
       - ./data/mysql:/var/lib/mysql
     ports:
-      - "3307:3306"
+      - "3307:3306" # Poveže notranja vrata 3306 (privzeta MySQL) na zunanja 3306, kar omogoča dostop do MySQL izven zabojnika (vrata na levi strani dvopičja lahko poljubno spremenimo) - to in prejšnjo vrstico potrebujemo zgolj v primeru, da se želimo na podatkovno bazo povezati iz kakšnega zunanjega orodja, kot je npr. MySQL Workbench
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
+    image: phpmyadmin/phpmyadmin:latest # Docker slika za phpMyAdmin. 'latest' bo prenesla najnovejšo različico
     restart: unless-stopped
     ports:
-      - "8001:80"
+      - "8001:80" # Poveže notranja vrata 80 na zunanja 8001, kar omogoča dostop do phpMyAdmin preko brskalnika na http://localhost:8001 (vrata na levi strani dvopičja lahko poljubno spremenimo), prijavite pa se z uporabniškim imenom "root" ter geslom, ki je nastavljeno zraven MYSQL_ROOT_PASSWORD . Predpona "127.0.0.1" spletni strežnik zaščiti, da se nanj ni možno povezati iz kakšne druge naprave na omrežju, na katerega je računalnik priklopljen
     environment:
-      PMA_HOST: podatkovna-baza
+      PMA_HOST: podatkovna-baza  # Ime MySQL zabojnika, na katerega se phpMyAdmin poveže. To je ime MySQL zabojnika ('mysql-pb'), ki ga uporablja Docker za omrežno povezovanje med zabojniki.
