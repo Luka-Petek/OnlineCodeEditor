@@ -1,32 +1,69 @@
 services:
 
   spletni-streznik:
-    build: # Namesto uporabe obstoječe Docker slike, bomo sliko zgradili na podlagi spodnjih navodil, kjer bomo osnovni sliki php:apache dodali še razširitve za povezovanje s podatkovno bazo
+    build: 
       context: .
       dockerfile_inline: |
         FROM php:apache
+        
+        # 1. Namestitev Docker CLI, Git in orodij za spremembo uporabnikov
+        RUN apt-get update && \
+            apt-get install -y git gettext && \
+            # Namestimo Docker CLI s curl 
+            curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-24.0.7.tgz | tar zx -C /usr/bin/ docker/docker && \
+            
+            # NOV POPRAVEK ZA IZVAJANJE DOCKER BINARNE DATOTEKE:
+            # Zagotovimo, da je binarna datoteka v lasti uporabnika www-data in ima dovoljenje 755 (rwxr-xr-x).
+            # To bi moralo 100% omogočiti izvajanje.
+            chown www-data:www-data /usr/bin/docker && \
+            chmod 755 /usr/bin/docker && \
+            rm -rf /var/lib/apt/lists/*
+            
+        # 2. Namestitev PHP razširitev
         RUN docker-php-ext-install pdo pdo_mysql
+
     restart: unless-stopped
     ports:
       - "8000:80"
     volumes:
-      - ./data/www:/var/www # Poveže lokalno mapo './data/www' z glavno mapo spletnega strežnika znotraj zabojnika. V to mapo namestimo datoteke spletne aplikacije.
+      # Mapiranje Docker Socketa
+      # Upoštevajte, da mora uporabnik www-data zdaj dostopati do te vtičnice prek dovoljenj SKUPINE (root GID 0)
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/www:/var/www
+      
+    # 3. Dodajanje uporabnika www-data k skupini root (GID 0) za dostop do socketa
+    command: >
+      /bin/sh -c "
+        echo 'IZVEDBA POPRAVKA: Dodajanje www-data k skupini root (GID 0) IN Zagotovitev pravice do izvajanja binarne datoteke docker.';
+        
+        # Dodajanje uporabnika www-data k skupini root (za dostop do /var/run/docker.sock)
+        usermod -a -G root www-data;
+        
+        echo 'Članstvo skupine uporabnika www-data:';
+        id www-data;
+        
+        echo 'Dovoljenja binarne datoteke docker:';
+        ls -l /usr/bin/docker;
+
+        # Zaženemo glavni proces Apache
+        exec apache2-foreground
+      "
 
   mysql:
     hostname: podatkovna-baza
-    image: mysql:latest # Docker slika, ki se prenese iz https://hub.docker.com/_/mysql. Lahko uporabite različico, npr. mysql:8.0.41, ali pa 'mysql:latest' za najnovejšo različico
+    image: mysql:latest
     restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=root
     volumes:
       - ./data/mysql:/var/lib/mysql
     ports:
-      - "3307:3306" # Poveže notranja vrata 3306 (privzeta MySQL) na zunanja 3306, kar omogoča dostop do MySQL izven zabojnika (vrata na levi strani dvopičja lahko poljubno spremenimo) - to in prejšnjo vrstico potrebujemo zgolj v primeru, da se želimo na podatkovno bazo povezati iz kakšnega zunanjega orodja, kot je npr. MySQL Workbench
+      - "3307:3306" 
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest # Docker slika za phpMyAdmin. 'latest' bo prenesla najnovejšo različico
+    image: phpmyadmin/phpmyadmin:latest
     restart: unless-stopped
     ports:
-      - "8001:80" # Poveže notranja vrata 80 na zunanja 8001, kar omogoča dostop do phpMyAdmin preko brskalnika na http://localhost:8001 (vrata na levi strani dvopičja lahko poljubno spremenimo), prijavite pa se z uporabniškim imenom "root" ter geslom, ki je nastavljeno zraven MYSQL_ROOT_PASSWORD . Predpona "127.0.0.1" spletni strežnik zaščiti, da se nanj ni možno povezati iz kakšne druge naprave na omrežju, na katerega je računalnik priklopljen
+      - "8001:80"
     environment:
-      PMA_HOST: podatkovna-baza  # Ime MySQL zabojnika, na katerega se phpMyAdmin poveže. To je ime MySQL zabojnika ('mysql-pb'), ki ga uporablja Docker za omrežno povezovanje med zabojniki.
+      PMA_HOST: podatkovna-baza

@@ -10,6 +10,8 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true || $_SERVER[
     exit;
 }
 
+//input je recimo $input: {"projektId": 123, "koda": "print('Hello')", "jezik": "python"}
+//to je php stream
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
 
@@ -37,7 +39,6 @@ try {
     };
     $imeDatoteke = "main." . $ekstenzija; 
     
-    //shranimo v absolutno pot 
     $dir_osnova = '/var/www/user_files/'; 
     $dir_path = $dir_osnova . $fk_uporabnik . '/' . $projekt_id . '/';
     $full_file_path = $dir_path . $imeDatoteke;

@@ -24,18 +24,21 @@ if (!$projekt) {
 }
 
 // *** LOGIKA ZA NALAGANJE SHRANJENE KODE ***
-require_once 'php/db.php'; 
-$db = getDatabaseConnection(); 
+require_once 'php/db.php';
+$db = getDatabaseConnection();
 
-$jezik = strtolower($projekt['jezik'] ?? 'default'); 
+$jezik = strtolower($projekt['jezik'] ?? 'default');
 $zacetna_vsebina_raw = '';
 
 $ekstenzija = match ($jezik) {
-    'java' => 'java', 'python' => 'py', 'c' => 'c', 
-    'javascript' => 'js', 'html' => 'html', 
+    'java' => 'java',
+    'python' => 'py',
+    'c' => 'c',
+    'javascript' => 'js',
+    'html' => 'html',
     default => 'txt',
 };
-$imeDatoteke = "main." . $ekstenzija; 
+$imeDatoteke = "main." . $ekstenzija;
 
 $sql_check_file = "SELECT potDatoteke FROM datoteka WHERE FKprojekt = :projekt_id AND imeDatoteke = :imeDatoteke";
 $stmt_check_file = $db->prepare($sql_check_file);
@@ -48,15 +51,13 @@ $shranjena_pot = $stmt_check_file->fetchColumn();
 if ($shranjena_pot) {
     if (file_exists($shranjena_pot)) {
         $vsebina_iz_diska = file_get_contents($shranjena_pot);
-        
+
         if ($vsebina_iz_diska !== false) {
             $zacetna_vsebina_raw = $vsebina_iz_diska;
-        } 
-        else {
+        } else {
             error_log("Napaka pri branju datoteke: " . $shranjena_pot);
         }
-    } 
-    else {
+    } else {
         error_log("Datoteka ni najdena na disku, čeprav je zapisana v bazi: " . $shranjena_pot);
     }
 }
@@ -85,7 +86,7 @@ if (empty(trim($zacetna_vsebina_raw))) {
 }
 $zacetna_vsebina = htmlspecialchars($zacetna_vsebina_raw);
 
-$codemirror_mode = 'clike'; 
+$codemirror_mode = 'clike';
 $mode_script = 'mode/clike/clike.min.js';
 
 switch ($jezik) {
@@ -98,7 +99,7 @@ switch ($jezik) {
         $mode_script = 'mode/javascript/javascript.min.js';
         break;
     case 'html':
-        $codemirror_mode = 'xml'; 
+        $codemirror_mode = 'xml';
         $mode_script = 'mode/xml/xml.min.js';
         break;
     case 'java':
@@ -165,7 +166,7 @@ Pritisnite "Zaženi Kodo" za simulacijo izvedbe.
             </pre>
         </div>
     </main>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/<?php echo $mode_script; ?>"></script>
     <?php if ($jezik === 'html'): ?>
@@ -176,6 +177,7 @@ Pritisnite "Zaženi Kodo" za simulacijo izvedbe.
 
     <script>
         const codeMirrorMode = '<?php echo $codemirror_mode === 'xml' ? 'htmlmixed' : $codemirror_mode; ?>';
+        const outputContainer = document.getElementById('output-container');
 
         const editor = CodeMirror.fromTextArea(document.getElementById('codeEditor'), {
             lineNumbers: true,
@@ -186,31 +188,49 @@ Pritisnite "Zaženi Kodo" za simulacijo izvedbe.
             lineWrapping: true,
         });
 
-        document.getElementById('runButton').addEventListener('click', () => {
-            const code = editor.getValue();
-            const outputContainer = document.getElementById('output-container');
-
-            outputContainer.textContent = `Pripravljam izvajanje ${codeMirrorMode}...`;
-
-            setTimeout(() => {
-                outputContainer.textContent = `
-[SIMULACIJA REZULTATA - Jezik: <?php echo strtoupper($projekt['jezik'] ?? 'NEZNANO'); ?>]
-Koda poslana v izvajalnik (<?php echo htmlspecialchars($projekt['imeProjekta'] ?? 'Neznan Projekt'); ?>).
-
-=================================
-Program Output:
-Uspešno izvedeno! (Simulacija)
-Prikazana je koda za <?php echo strtoupper($projekt['jezik'] ?? 'NEZNANO'); ?>.
- 
-Čas izvajanja: 125 ms.
-            `;
-            }, 800);
-        });
-
         // *** SHRANI BUTTON LOGIKA (AJAX) ***
         const PROJEKT_ID = <?php echo json_encode($projekt_id); ?>;
         const JEZIK = '<?php echo $jezik; ?>';
         const SAVE_URL = 'php/shraniKodo.php';
+        const RUN_URL = 'php/izvediKodo.php';
+
+        document.getElementById('runButton').addEventListener('click', () => {
+            const data = editor.getValue();
+
+            outputContainer.textContent = "Izvajam kodo...";
+
+            fetch(RUN_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    projektId: PROJEKT_ID,
+                    koda: data,
+                    jezik: JEZIK
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(error => { throw new Error(error.output || `Napaka strežnika: ${response.status}`); });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const header = '[Izhod iz docker sandboxa - ${JEZIK.toUpperCase()}]\n=================================\n`'
+                    if (data.success) {
+                        outputContainer.textContent = data.output;
+                    } 
+                    else {
+                        outputContainer.textContent = `Napaka pri izvajanju: ${data.output}`;
+                        console.error("Napaka:", data.output);
+                    }
+                })
+                .catch(error => {
+                    outputContainer.textContent = `Napaka: ${error.message}.`;
+                    console.error('Fetch Error:', error);
+                });
+        });
 
         document.getElementById('saveButton').addEventListener('click', () => {
             const koda = editor.getValue();
