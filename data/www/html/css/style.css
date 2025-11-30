@@ -10,6 +10,46 @@
     --color-border: #30363d;
 }
 
+/* -------------------------------------------------------------------------------- */
+/* POPRAVEK NAVIGACIJE (Odmik in rešitev konfliktnih stilov) */
+/* -------------------------------------------------------------------------------- */
+
+.main-nav {
+    /* Uporabimo fiksno vrednost (npr. 32px), saj se 2% navpičnega odmika
+       računa glede na širino in povzroča probleme. */
+    margin-top: 32px; 
+    text-align: center;
+}
+
+.main-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0; 
+    display: flex; /* Omogoči centriranje in gap */
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.nav-link {
+    color: var(--color-text-light);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.5rem;
+    padding: 0.5rem 0;
+    transition: color 0.2s, border-bottom 0.2s;
+    border-bottom: 2px solid transparent;
+}
+
+.nav-link:hover {
+    color: var(--color-primary);
+    border-bottom: 2px solid var(--color-primary);
+}
+
+/* -------------------------------------------------------------------------------- */
+/* KONEC POPRAVLJENE NAVIGACIJE */
+/* -------------------------------------------------------------------------------- */
+
+
 body {
     font-family: 'Inter', sans-serif;
     background-color: var(--color-bg-dark);
@@ -112,15 +152,19 @@ main {
 
 .card {
     background-color: var(--color-bg-card);
-    padding: 24px;
+    /* ODSTRANJEN PADDING (Prenaša se na card-flex) */
     border-radius: 12px;
     border: 1px solid var(--color-border);
     transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
     min-width: 200px;
 }
-.card, .card h3, .card p, .card span {
-    text-decoration: none !important; 
+
+.card,
+.card h3,
+.card p,
+.card span {
+    text-decoration: none !important;
 }
 
 .card:hover {
@@ -210,7 +254,7 @@ footer a:hover {
     font-weight: 700;
 }
 
-.auth-container > a {
+.auth-container>a {
     /* To bo centriralo vso inline vsebino (kot je vaša <a> povezava) */
     text-align: center;
     justify-content: center;
@@ -224,7 +268,7 @@ footer a:hover {
 .form-group label {
     font-weight: 500;
     margin-bottom: 6px;
-    color: var(--color-secondary);
+    color: var(--color-text-subtle); /* Uporabljam text-subtle namesto nedefinirane color-secondary */
     font-size: 0.95rem;
 }
 
@@ -235,7 +279,7 @@ footer a:hover {
     border-radius: 6px;
     font-size: 1em;
     box-sizing: border-box;
-    background-color: var(--color-bg-input);
+    background-color: var(--color-bg-card); /* Uporabljam bg-card namesto nedefinirane color-bg-input */
     color: var(--color-text-light);
     transition: border-color 0.3s, box-shadow 0.3s;
 }
@@ -263,7 +307,7 @@ footer a:hover {
 }
 
 .submit-btn:hover {
-    background-color: var(--color-primary-dark);
+    background-color: #2563eb; /* Temnejša verzija var(--color-primary) */
     transform: translateY(-1px);
 }
 
@@ -282,52 +326,6 @@ footer a:hover {
 
 .login-link a:hover {
     text-decoration: underline;
-}
-
-.main-nav ul {
-    text-align: center;
-    justify-content: center;
-    list-style: none;
-    padding: 0;
-    margin-top: 2%;
-    gap: 1.5rem;
-}
-
-.nav-link {
-    color: var(--color-text-light);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 1.5rem;
-    padding: 0.5rem 0.5rem;
-    transition: color 0.2s, border-bottom 0.2s;
-    border-bottom: 2px solid transparent;
-}
-
-.nav-link:hover {
-    color: var(--color-primary);
-    border-bottom: 2px solid var(--color-primary);
-}
-
-.main-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    gap: 1.5rem;
-}
-
-.nav-link {
-    color: var(--color-text-light);
-    text-decoration: none;
-    font-weight: 500;
-    padding: 0.5rem 0;
-    transition: color 0.2s, border-bottom 0.2s;
-    border-bottom: 2px solid transparent;
-}
-
-.nav-link:hover {
-    color: var(--color-primary);
-    border-bottom: 2px solid var(--color-primary);
 }
 
 @media (max-width: 768px) {
@@ -368,7 +366,6 @@ footer a:hover {
 }
 
 /* GREETING MESSAGE */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&display=swap');
 
 .greeting-message {
     color: var(--color-primary);
@@ -378,7 +375,7 @@ footer a:hover {
 }
 
 .logout-btn {
-    background-color: var(--color-danger, #ef4444);
+    background-color: #ef4444; /* Uporabljam direktno rdečo, saj var(--color-danger) ni definiran */
     border: none;
     color: white;
     padding: 10px 15px;
@@ -391,4 +388,63 @@ footer a:hover {
 
 .logout-btn:hover {
     background-color: #dc2626;
+}
+
+/* DELETE GUMB STILI (Iz prejšnjega popravka) */
+.card-flex {
+    display: flex;
+    flex-direction: column; /* Glavni tok je še vedno vertikalen (header, description, footer) */
+    padding: 20px;
+    position: relative; /* Nujno za absolutno pozicioniranje gumba */
+}
+
+/* Flex kontejner za vsebino in gumb Izbriši */
+.card-action-end {
+    /* Pozicionira gumb v zgornji desni kot kartice */
+    position: absolute;
+    top: 15px; /* Odmik od vrha */
+    right: 15px; /* Odmik od desne */
+    z-index: 10; /* Poskrbi, da je gumb nad ostalimi elementi */
+}
+
+/* Stil za gumb IZBRIŠI (ikona + beseda) */
+.delete-btn-full {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* Razmik med ikono in besedo */
+    
+    /* Barvanje gumba */
+    background-color: #ef4444; /* Rdeča - za opozorila/nevarnost */
+    color: white;
+    
+    /* Oblika in animacija */
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Nežna senca */
+}
+
+.delete-btn-full:hover {
+    background-color: #dc2626; /* Temnejša rdeča */
+    transform: translateY(-1px); /* Rahlo se dvigne */
+}
+
+.trash-icon {
+    font-size: 1rem;
+}
+
+.card-content-link {
+    flex-grow: 1;
+    display: block;
+    padding-bottom: 10px; 
+}
+
+.card-footer {
+    margin-top: auto; 
+    padding-top: 10px;
+    border-top: 1px dashed var(--color-border);
 }

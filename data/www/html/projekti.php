@@ -10,6 +10,13 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 $user_name = htmlspecialchars($_SESSION['ime'] ?? 'Uporabnik');
 $fk_uporabnik = $_SESSION['user_id'];
 
+// --- DODANO: Preveri in pobriši sporočila o uspehu/napakah iz seje ---
+$success_message = $_SESSION['success_message'] ?? null;
+$error_message = $_SESSION['error_message'] ?? null;
+unset($_SESSION['success_message']);
+unset($_SESSION['error_message']);
+// ----------------------------------------------------------------------
+
 $theme = isset($_COOKIE['theme']) ? $_COOKIE['theme'] : 'dark';
 $theme_icon = ($theme === 'dark') ? 'sun' : 'moon';
 
@@ -40,6 +47,8 @@ function getLangStyle($jezik) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodaLab - Moji Projekti</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- DODANO: Font Awesome za ikono smetnjaka -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMDJ8G9IStTz5mB+w85qK4/f6P8/g2M+LpS+K+z4L0R7F72E8E8T17lE4wT7+6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -94,9 +103,15 @@ function getLangStyle($jezik) {
         <div class="container">
             <h2 class="section-title">Aktivni in shranjeni projekti</h2>
 
-            <?php if (isset($error_message)): ?>
+            <?php if ($success_message): ?>
+                <div style="padding: 1rem; background-color: #10b981; color: white; border-radius: 8px; margin-bottom: 20px;">
+                    <?php echo htmlspecialchars($success_message); ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($error_message): ?>
                 <div style="padding: 1rem; background-color: #ef4444; color: white; border-radius: 8px; margin-bottom: 20px;">
-                    <?php echo $error_message; ?>
+                    <?php echo htmlspecialchars($error_message); ?>
                 </div>
             <?php endif; ?>
 
@@ -110,23 +125,38 @@ function getLangStyle($jezik) {
                     <?php foreach ($projekti as $projekt):
                         $style = getLangStyle($projekt['jezik']);
                         $jezik_lower = strtolower($projekt['jezik']);
-                        $datum = new DateTime($projekt['datumNastanka']);
+                        $datum = isset($projekt['datumNastanka']) ? new DateTime($projekt['datumNastanka']) : null;
                     ?>
-                        <a href="dashboard.php?id=<?php echo $projekt['id']; ?>" class="card" data-lang="<?php echo $jezik_lower; ?>">
-                            <div>
-                                <div class="card-header">
-                                    <span class="card-icon" style="color: <?php echo $style['color']; ?>;"><?php echo $style['icon']; ?></span>
-                                    <h3 class="card-title"><?php echo htmlspecialchars($projekt['imeProjekta']); ?></h3>
+                        <div class="card card-flex" data-lang="<?php echo $jezik_lower; ?>">
+                            
+                            <a href="dashboard.php?id=<?php echo $projekt['id']; ?>" class="card-content-link" style="text-decoration: none; color: inherit; display: block; flex-grow: 1; padding: 0;">
+                                <div>
+                                    <div class="card-header">
+                                        <span class="card-icon" style="color: <?php echo $style['color']; ?>;"><?php echo $style['icon']; ?></span>
+                                        <h3 class="card-title"><?php echo htmlspecialchars($projekt['imeProjekta']); ?></h3>
+                                    </div>
+                                    <p class="card-description">
+                                        <?php echo htmlspecialchars($projekt['opis'] ?? 'Ni opisa projekta.'); ?>
+                                    </p>
                                 </div>
-                                <p class="card-description">
-                                    <?php echo htmlspecialchars($projekt['opis'] ?? 'Ni opisa projekta.'); ?>
-                                </p>
-                            </div>
+                            </a>
+                            
                             <div class="card-footer">
                                 <span class="card-language"><?php echo strtoupper($projekt['jezik']); ?></span>
-                                <span>Ustvarjeno: <?php echo $datum->format('d.m.Y'); ?></span>
+                                <span>Ustvarjeno: <?php echo $datum ? $datum->format('d.m.Y') : 'Neznano'; ?></span>
                             </div>
-                        </a>
+
+                            <div class="card-action-end">
+                                <button 
+                                    class="delete-btn-full" 
+                                    title="Izbriši projekt: <?php echo htmlspecialchars($projekt['imeProjekta']); ?>"
+                                    onclick="potrdiBrisanje(<?php echo $projekt['id']; ?>, '<?php echo htmlspecialchars(addslashes($projekt['imeProjekta'])); ?>')"
+                                >
+                                    <i class="fas fa-trash-alt trash-icon"></i>
+                                    <span class="delete-text">Izbriši</span>
+                                </button>
+                            </div>
+                        </div>
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
@@ -158,6 +188,24 @@ function getLangStyle($jezik) {
                     : '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>';
             }
         });
+
+        function potrdiBrisanje(projektId, imeProjekta) {
+            if (confirm(`Ali ste prepričani, da želite izbrisati projekt "${imeProjekta}"? Ta operacija je nepovratna.`)) {
+                
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'php/deleteProject.php'; 
+
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'projekt_id';
+                input.value = projektId;
+
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
     </script>
 </body>
 </html>
