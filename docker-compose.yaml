@@ -11,10 +11,8 @@ services:
             apt-get install -y git gettext && \
             # Namestimo Docker CLI s curl 
             curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-24.0.7.tgz | tar zx -C /usr/bin/ docker/docker && \
-            
-            # NOV POPRAVEK ZA IZVAJANJE DOCKER BINARNE DATOTEKE:
+
             # Zagotovimo, da je binarna datoteka v lasti uporabnika www-data in ima dovoljenje 755 (rwxr-xr-x).
-            # To bi moralo 100% omogočiti izvajanje.
             chown www-data:www-data /usr/bin/docker && \
             chmod 755 /usr/bin/docker && \
             rm -rf /var/lib/apt/lists/*

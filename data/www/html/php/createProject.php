@@ -10,7 +10,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_
 $fk_uporabnik = $_SESSION['user_id'];
 $db = getDatabaseConnection();
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $ime_projekta = trim($_POST['imeProjekta'] ?? '');
