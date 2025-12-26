@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="sl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeLab - Profil</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .profil {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            
+            max-width: 1000px;
+            margin: 40px auto;
+            background-color: var(--color-bg-card);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            align-items: start;
+        }
+
+        .slikaInInfo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .profilna-slika {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background-color: var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 70px;
+            border: 4px solid var(--color-primary);
+            color: var(--color-text-subtle);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .vsebina h2 {
+            margin-top: 0;
+            font-size: 28px;
+            color: var(--color-primary);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .podatki-skupina {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .podatki-vrstica {
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 10px;
+        }
+
+        .podatki-label {
+            display: block;
+            font-size: 12px;
+            color: var(--color-text-subtle);
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .podatki-vrednost {
+            font-size: 18px;
+            color: var(--color-text);
+        }
+
+        .badge-admin {
+            background-color: #e63946; 
+            color: white;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            .profil {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .slikaInInfo {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="staticHeader">
+            <div class="logo">
+                <span class="kodeLab">Code</span>Lab
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="profil">
+            <section class="slikaInInfo">
+                <div class="profilna-slika">
+                    <i data-lucide="user" size="64"></i>
+                </div>
+                <p style="margin-top: 20px; color: var(--color-text-subtle); font-size: 14px;">
+                    Uporabnik od: <br><strong>26. 12. 2025</strong>
+                </p>
+            </section>
+
+            <section class="vsebina">
+                <h2>Osebni podatki <span class="badge-admin">Admin</span></h2>
+                
+                <div class="podatki-skupina">
+                    <div class="podatki-vrstica">
+                        <span class="podatki-label">Ime in priimek</span>
+                        <span class="podatki-vrednost">Janez Novak</span>
+                    </div>
+
+                    <div class="podatki-vrstica">
+                        <span class="podatki-label">Email naslov</span>
+                        <span class="podatki-vrednost">janez.novak@gmail.com</span>
+                    </div>
+
+                    <div class="podatki-vrstica">
+                        <span class="podatki-label">Varnost</span>
+                        <span class="podatki-vrednost">Geslo je nastavljeno (shranjeno šifrirano)</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 40px; display: flex; gap: 10px;">
+                    <button class="prijavaRegistracija">Uredi profil</button>
+                    <button class="prijavaRegistracija" style="background: transparent; border: 1px solid var(--color-border);">Spremeni geslo</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            &copy; 2025 CodaLab. Vse pravice pridržane. | <a href="#">Pogoji uporabe</a>
+        </div>
+    </footer>
+</body>
+
+</html>

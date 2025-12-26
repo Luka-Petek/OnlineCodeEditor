@@ -46,7 +46,7 @@ services:
         # Zaženemo glavni proces Apache
         exec apache2-foreground
       "
-
+      
   mysql:
     hostname: podatkovna-baza
     image: mysql:latest

@@ -66,8 +66,8 @@ $theme_icon = ($theme === 'dark') ? 'sun' : 'moon';
         <?php if ($is_logged_in): ?>
         <nav class="main-nav">
             <ul>
-                <li><a class="nav-link" href="projekti.php">Projekti</a></li>
-                <li><a href="#" class="nav-link">Profil</a></li>
+                <li><a href="projekti.php" class="nav-link">Projekti</a></li>
+                <li><a href="profil.html" class="nav-link">Profil</a></li>
                 <li><a href="#" class="nav-link">O nas</a></li>
             </ul>
         </nav>

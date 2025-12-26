@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
              echo "<!DOCTYPE html><html lang='sl'><head><title>Napaka</title><style>body{font-family: sans-serif; background: #1f2937; color: white; padding: 20px;} h2{color:#f87171;}</style></head><body>";
              echo "<h2>Napaka pri registraciji</h2>";
              echo "<p style='color: #f87171;'>Sistemska napaka: " . htmlspecialchars($final_error) . "</p>";
-             echo "<p><a style='color:#3b82f6;' href='../html/registracija.html'>Poskusi znova</a></p>";
+             echo "<p><a style='color:#3b82f6;' href='../registracija.html'>Poskusi znova</a></p>";
              echo "</body></html>";
         }
     } else {
@@ -100,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (!empty($geslo_err)) echo "<p style='color: #f87171;'>Geslo: " . $geslo_err . "</p>";
         if (!empty($geslo_ponovi_err)) echo "<p style='color: #f87171;'>Potrditev gesla: " . $geslo_ponovi_err . "</p>";
         
-        echo "<p><a style='color:#3b82f6;' href='../html/registracija.html'>Poskusi znova</a></p>";
+        echo "<p><a style='color:#3b82f6;' href='../registracija.html'>Poskusi znova</a></p>";
         echo "</body></html>";
     }
 

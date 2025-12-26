@@ -1,22 +1,66 @@
-/* Uvoz fonta za moderen videz */
+/* --- 1. OSNOVNE NASTAVITVE IN SPREMENLJIVKE --- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&display=swap');
 
 :root {
     --color-bg-dark: #0d1117;
     --color-bg-card: #161b22;
     --color-primary: #3b82f6;
+    --color-primary-hover: #2563eb;
     --color-text-light: #e4e6eb;
     --color-text-subtle: #8b949e;
     --color-border: #30363d;
+    --color-danger: #ef4444;
+    --color-danger-hover: #dc2626;
 }
 
-/* -------------------------------------------------------------------------------- */
-/* POPRAVEK NAVIGACIJE (Odmik in rešitev konfliktnih stilov) */
-/* -------------------------------------------------------------------------------- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--color-bg-dark);
+    color: var(--color-text-light);
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+}
+
+/* --- 2. GLAVA (HEADER) IN NAVIGACIJA --- */
+.staticHeader {
+    width: 100%;
+    background-color: rgba(13, 17, 23, 0.9);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 0 32px;
+    height: 64px;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.kodeLab {
+    color: var(--color-primary);
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
 
 .main-nav {
-    /* Uporabimo fiksno vrednost (npr. 32px), saj se 2% navpičnega odmika
-       računa glede na širino in povzroča probleme. */
     margin-top: 32px; 
     text-align: center;
 }
@@ -25,7 +69,7 @@
     list-style: none;
     padding: 0;
     margin: 0; 
-    display: flex; /* Omogoči centriranje in gap */
+    display: flex;
     justify-content: center;
     gap: 1.5rem;
 }
@@ -45,67 +89,7 @@
     border-bottom: 2px solid var(--color-primary);
 }
 
-/* -------------------------------------------------------------------------------- */
-/* KONEC POPRAVLJENE NAVIGACIJE */
-/* -------------------------------------------------------------------------------- */
-
-
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--color-bg-dark);
-    color: var(--color-text-light);
-    margin: 0;
-    min-height: 100vh;
-
-    display: grid;
-    /* main je skozi cel ekran, ostalo se avtomatsko prilagaja */
-    grid-template-rows: auto auto 1fr auto;
-}
-
-.staticHeader {
-    width: 100%;
-    background-color: rgba(13, 17, 23, 0.9);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(5px);
-    top: 0;
-    z-index: 1000;
-
-    /* NOTRANJI GRID: Logo (1f), Gumbi (auto) */
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    padding: 0 32px;
-    /* Enako kot max-width center s paddingom */
-    height: 64px;
-    max-width: 1280px;
-    margin: 0 auto;
-}
-
-.logo {
-    font-size: 24px;
-    font-weight: 700;
-}
-
-.kodeLab {
-    color: var(--color-primary);
-}
-
-.prijavaRegistracija {
-    text-decoration: none;
-    background-color: var(--color-primary);
-    color: var(--color-text-light);
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    text-align: center;
-    transition: background-color 0.2s;
-}
-
-.prijavaRegistracija:hover {
-    background-color: #2563eb;
-}
-
+/* --- 3. GLAVNA VSEBINA (HERO SECTION) --- */
 .mainHeader {
     text-align: center;
     padding: 64px 20px;
@@ -141,9 +125,9 @@ main {
     font-size: 28px;
     font-weight: 700;
     margin-bottom: 32px;
-    color: var(--color-text-light);
 }
 
+/* --- 4. KARTICE (GRID & CARDS) --- */
 .cards-grid {
     display: grid;
     gap: 24px;
@@ -152,18 +136,11 @@ main {
 
 .card {
     background-color: var(--color-bg-card);
-    /* ODSTRANJEN PADDING (Prenaša se na card-flex) */
     border-radius: 12px;
     border: 1px solid var(--color-border);
     transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
     min-width: 200px;
-}
-
-.card,
-.card h3,
-.card p,
-.card span {
     text-decoration: none !important;
 }
 
@@ -171,6 +148,13 @@ main {
     transform: translateY(-5px);
     box-shadow: 0 15px 30px rgba(59, 130, 246, 0.2);
     background-color: #1a222c;
+}
+
+.card-flex {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    position: relative;
 }
 
 .card-header {
@@ -194,26 +178,170 @@ main {
     color: var(--color-text-subtle);
 }
 
-.card[data-lang="java"] .card-title {
-    color: #f87171;
+.card-content-link {
+    flex-grow: 1;
+    display: block;
+    padding-bottom: 10px;
+    text-decoration: none !important;
 }
 
-.card[data-lang="c"] .card-title {
-    color: #60a5fa;
+.card-footer {
+    margin-top: auto; 
+    padding-top: 10px;
+    border-top: 1px dashed var(--color-border);
 }
 
-.card[data-lang="python"] .card-title {
-    color: #facc15;
+/* Programski jeziki - barve */
+.card[data-lang="java"] .card-title { color: #f87171; }
+.card[data-lang="c"] .card-title { color: #60a5fa; }
+.card[data-lang="python"] .card-title { color: #facc15; }
+.card[data-lang="javascript"] .card-title { color: #fcd34d; }
+.card[data-lang="html"] .card-title { color: #fb923c; }
+
+/* --- 5. GUMBI IN AKCIJE --- */
+.prijavaRegistracija, .submit-btn {
+    text-decoration: none;
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    font-weight: 600;
+    transition: background-color 0.2s, transform 0.1s;
+    text-align: center;
 }
 
-.card[data-lang="javascript"] .card-title {
-    color: #fcd34d;
+.prijavaRegistracija {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 16px;
 }
 
-.card[data-lang="html"] .card-title {
-    color: #fb923c;
+.submit-btn {
+    width: 100%;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    text-transform: uppercase;
+    margin-top: 10px;
 }
 
+.prijavaRegistracija:hover, .submit-btn:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.submit-btn:hover {
+    transform: translateY(-1px);
+}
+
+.logout-btn, .delete-btn-full {
+    color: white;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.logout-btn {
+    background-color: var(--color-danger);
+    padding: 10px 15px;
+    text-decoration: none;
+}
+
+.logout-btn:hover {
+    background-color: var(--color-danger-hover);
+}
+
+.card-action-end {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+}
+
+.delete-btn-full {
+    gap: 6px;
+    background-color: var(--color-danger);
+    padding: 8px 12px;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.delete-btn-full:hover {
+    background-color: var(--color-danger-hover);
+    transform: translateY(-1px);
+}
+
+/* --- 6. AVTENTIKACIJA (FORME) --- */
+.auth-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 30px;
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 0 auto;
+}
+
+.auth-container h2 {
+    text-align: center;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+.auth-container > a {
+    text-align: center;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: var(--color-text-subtle);
+    font-size: 0.95rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    font-size: 1em;
+    background-color: var(--color-bg-card);
+    color: var(--color-text-light);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--color-text-subtle);
+}
+
+.login-link a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* --- 7. NOGA (FOOTER) --- */
 footer {
     background-color: rgba(13, 17, 23, 0.8);
     border-top: 1px solid var(--color-border);
@@ -232,219 +360,36 @@ footer a:hover {
     text-decoration: underline;
 }
 
-/* REGISTRACIJA */
-
-.auth-container {
-    width: 100%;
-    max-width: 600px;
-    padding: 30px;
-    background-color: var(--color-bg-card);
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.4);
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.auth-container h2 {
-    text-align: center;
-    color: var(--color-text-light);
-    margin-bottom: 5px;
-    font-weight: 700;
-}
-
-.auth-container>a {
-    /* To bo centriralo vso inline vsebino (kot je vaša <a> povezava) */
-    text-align: center;
-    justify-content: center;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group label {
-    font-weight: 500;
-    margin-bottom: 6px;
-    color: var(--color-text-subtle); /* Uporabljam text-subtle namesto nedefinirane color-secondary */
-    font-size: 0.95rem;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
-    font-size: 1em;
-    box-sizing: border-box;
-    background-color: var(--color-bg-card); /* Uporabljam bg-card namesto nedefinirane color-bg-input */
-    color: var(--color-text-light);
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.form-group input:focus {
-    border-color: var(--color-primary);
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
-}
-
-.submit-btn {
-    width: 100%;
-    background-color: var(--color-primary);
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    transition: background-color 0.2s, transform 0.1s;
-    text-transform: uppercase;
-    margin-top: 10px;
-}
-
-.submit-btn:hover {
-    background-color: #2563eb; /* Temnejša verzija var(--color-primary) */
-    transform: translateY(-1px);
-}
-
-.login-link {
-    text-align: center;
-    margin-top: 10px;
-    font-size: 14px;
-    color: var(--color-text-subtle);
-}
-
-.login-link a {
-    color: var(--color-primary);
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.login-link a:hover {
-    text-decoration: underline;
-}
-
+/* --- 8. ODZIVNOST (RESPONSIVENESS) --- */
 @media (max-width: 768px) {
-
-    /* Spremeni obnašanje glavne glave */
     .staticHeader {
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 1rem;
+        grid-template-columns: 1fr auto;
+        height: auto;
         padding: 1rem;
+        gap: 1rem;
     }
 
-    /* Postavi navigacijo na dno glave in jo raztegni čez celo širino */
     .main-nav {
-        margin: 1%;
+        grid-column: 1 / span 2;
+        margin: 1rem 0;
         order: 3;
         flex-basis: 100%;
-        text-align: center;
     }
 
-    /* Centriraj elemente v navigaciji */
     .main-nav ul {
         justify-content: center;
         gap: 1rem;
     }
 
-    /* Prilagodi vrstni red ostalih elementov */
     .header-controls {
         order: 2;
-        gap: 0.75rem;
     }
 
     .logo {
         order: 1;
-        flex-grow: 1;
-        text-align: left;
     }
-}
 
-/* GREETING MESSAGE */
-
-.greeting-message {
-    color: var(--color-primary);
-    font-weight: 500;
-    padding: 8px 0;
-    white-space: nowrap;
-}
-
-.logout-btn {
-    background-color: #ef4444; /* Uporabljam direktno rdečo, saj var(--color-danger) ni definiran */
-    border: none;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: background-color 0.2s;
-    display: inline-flex;
-    align-items: center;
-}
-
-.logout-btn:hover {
-    background-color: #dc2626;
-}
-
-/* DELETE GUMB STILI (Iz prejšnjega popravka) */
-.card-flex {
-    display: flex;
-    flex-direction: column; /* Glavni tok je še vedno vertikalen (header, description, footer) */
-    padding: 20px;
-    position: relative; /* Nujno za absolutno pozicioniranje gumba */
-}
-
-/* Flex kontejner za vsebino in gumb Izbriši */
-.card-action-end {
-    /* Pozicionira gumb v zgornji desni kot kartice */
-    position: absolute;
-    top: 15px; /* Odmik od vrha */
-    right: 15px; /* Odmik od desne */
-    z-index: 10; /* Poskrbi, da je gumb nad ostalimi elementi */
-}
-
-/* Stil za gumb IZBRIŠI (ikona + beseda) */
-.delete-btn-full {
-    display: flex;
-    align-items: center;
-    gap: 6px; /* Razmik med ikono in besedo */
-    
-    /* Barvanje gumba */
-    background-color: #ef4444; /* Rdeča - za opozorila/nevarnost */
-    color: white;
-    
-    /* Oblika in animacija */
-    padding: 8px 12px;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s, transform 0.1s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Nežna senca */
-}
-
-.delete-btn-full:hover {
-    background-color: #dc2626; /* Temnejša rdeča */
-    transform: translateY(-1px); /* Rahlo se dvigne */
-}
-
-.trash-icon {
-    font-size: 1rem;
-}
-
-.card-content-link {
-    flex-grow: 1;
-    display: block;
-    padding-bottom: 10px; 
-}
-
-.card-footer {
-    margin-top: auto; 
-    padding-top: 10px;
-    border-top: 1px dashed var(--color-border);
+    .mainHeader h1 {
+        font-size: 32px;
+    }
 }
