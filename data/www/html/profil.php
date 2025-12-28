@@ -21,6 +21,12 @@ include 'php/userInfo.php';
         </div>
     </header>
 
+    <nav class="main-nav">
+            <ul>
+                <li><a class="nav-link" href="index.php">Nazaj</a></li>
+            </ul>
+        </nav>
+
     <main class="container">
         <div class="profil">
             <section class="slikaInInfo">

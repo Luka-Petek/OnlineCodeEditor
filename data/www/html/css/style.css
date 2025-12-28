@@ -142,6 +142,7 @@ main {
     cursor: pointer;
     min-width: 200px;
     text-decoration: none !important;
+    padding-left: 10px;
 }
 
 .card:hover {

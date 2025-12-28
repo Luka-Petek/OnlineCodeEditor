@@ -68,7 +68,7 @@ $theme_icon = ($theme === 'dark') ? 'sun' : 'moon';
             <ul>
                 <li><a href="projekti.php" class="nav-link">Projekti</a></li>
                 <li><a href="profil.php" class="nav-link">Profil</a></li>
-                <li><a href="#" class="nav-link">O nas</a></li>
+                <li><a href="oNas.html" class="nav-link">O nas</a></li>
             </ul>
         </nav>
         <?php endif; ?>

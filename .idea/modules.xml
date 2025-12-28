@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/OnlineCodeEditor.iml" filepath="$PROJECT_DIR$/.idea/OnlineCodeEditor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/data/www/html/html.iml" filepath="$PROJECT_DIR$/data/www/html/html.iml" />
+      <module fileurl="file://$PROJECT_DIR$/data/www/user_files/user_files.iml" filepath="$PROJECT_DIR$/data/www/user_files/user_files.iml" />
+    </modules>
+  </component>
+</project>
