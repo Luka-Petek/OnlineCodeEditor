@@ -24,12 +24,10 @@ services:
     ports:
       - "8000:80"
     volumes:
-      # Mapiranje Docker Socketa
-      # Upoštevajte, da mora uporabnik www-data zdaj dostopati do te vtičnice prek dovoljenj SKUPINE (root GID 0)
       - /var/run/docker.sock:/var/run/docker.sock
       - ./data/www:/var/www
       
-    # 3. Dodajanje uporabnika www-data k skupini root (GID 0) za dostop do socketa
+    #dodajanje userja www-data k skupini root (GID 0) za dostop do socketa
     command: >
       /bin/sh -c "
         echo 'IZVEDBA POPRAVKA: Dodajanje www-data k skupini root (GID 0) IN Zagotovitev pravice do izvajanja binarne datoteke docker.';
