@@ -10,12 +10,10 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 $user_name = htmlspecialchars($_SESSION['ime'] ?? 'Uporabnik');
 $fk_uporabnik = $_SESSION['user_id'];
 
-// --- DODANO: Preveri in pobriši sporočila o uspehu/napakah iz seje ---
 $success_message = $_SESSION['success_message'] ?? null;
 $error_message = $_SESSION['error_message'] ?? null;
 unset($_SESSION['success_message']);
 unset($_SESSION['error_message']);
-// ----------------------------------------------------------------------
 
 $theme = isset($_COOKIE['theme']) ? $_COOKIE['theme'] : 'dark';
 $theme_icon = ($theme === 'dark') ? 'sun' : 'moon';
@@ -57,26 +55,6 @@ function getLangStyle($jezik) {
                 <span class="kodeLab">Code</span>Lab
             </div>
             <div style="display: flex; align-items: center; gap: 16px;">
-                <button id="themeToggle" title="Spremeni temo"
-                    style="padding: 8px; border-radius: 50%; background: none; border: none; color: var(--color-text-subtle); cursor: pointer; transition: color 0.2s;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="lucide lucide-<?php echo $theme_icon; ?>">
-                        <?php if ($theme_icon === 'sun'): ?>
-                            <circle cx="12" cy="12" r="4" />
-                            <path d="M12 2v2" />
-                            <path d="M12 20v2" />
-                            <path d="m4.93 4.93 1.41 1.41" />
-                            <path d="m17.66 17.66 1.41 1.41" />
-                            <path d="m2 12h2" />
-                            <path d="m20 12h2" />
-                            <path d="m6.34 17.66-1.41 1.41" />
-                            <path d="m19.07 4.93-1.41 1.41" />
-                        <?php else: ?>
-                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
-                        <?php endif; ?>
-                    </svg>
-                </button>
 
                 <span class="greeting-message">Pozdravljen, <?php echo $user_name; ?>!</span>
                 <a href="php/odjava.php" class="logout-btn">Odjava</a>
@@ -168,6 +146,7 @@ function getLangStyle($jezik) {
         </div>
     </footer>
     
+    <script src="js/tema.js"></script>
     <script>
         document.getElementById('themeToggle').addEventListener('click', () => {
             const currentTheme = document.documentElement.getAttribute('data-theme');

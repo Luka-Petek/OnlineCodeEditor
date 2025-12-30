@@ -78,6 +78,7 @@ include 'php/userInfo.php';
         </div>
     </footer>
 
+    <script src="js/tema.js"></script>
     <script>
         // Inicializacija ikon
         lucide.createIcons();
