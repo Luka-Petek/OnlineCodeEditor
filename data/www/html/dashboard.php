@@ -121,6 +121,7 @@ switch ($jezik) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodeLab - Urejevalnik Kode - <?php echo htmlspecialchars($projekt['imeProjekta'] ?? 'Neznan Projekt'); ?>
     </title>
+    <link rel="icon" type="image/png" href="pictures/icon.png">
     <link rel="stylesheet" href="css/editor.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.15/codemirror.min.css">

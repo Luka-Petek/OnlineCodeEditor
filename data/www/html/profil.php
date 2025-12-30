@@ -8,6 +8,7 @@ include 'php/userInfo.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodeLab - Profil</title>
+    <link rel="icon" type="image/png" href="pictures/icon.png">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>

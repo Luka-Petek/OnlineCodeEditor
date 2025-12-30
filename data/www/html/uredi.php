@@ -40,8 +40,8 @@ $jeziki = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uredi Projekt - <?php echo $imeProjekta; ?></title>
+    <link rel="icon" type="image/png" href="pictures/icon.png">
     <link rel="stylesheet" href="css/style.css">
-    <!-- Dodajanje Font Awesome za ikone (kot na vašem primeru dashboard.php) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* Ohranimo enake osnovne stile za centriranje kot v vašem primeru */

@@ -13,6 +13,7 @@ $current_user_id = $is_logged_in ? ($_SESSION['user_id'] ?? 0) : 0;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodaLab - Spletni Urejevalnik Kode</title>
+    <link rel="icon" type="image/png" href="pictures/icon.png">
     <link rel="stylesheet" href="css/style.css">
     <script src="js/tema.js"></script>
 </head>
