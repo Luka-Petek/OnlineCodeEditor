@@ -147,6 +147,7 @@ switch ($jezik) {
                 Shrani
             </button>
             <span style="font-size: 0.875rem; color: var(--color-text-secondary);"><?php echo $user_name; ?></span>
+            <a href="index.php" class="prijavaRegistracija">Nazaj</a>
             <a href="php/odjava.php" class="logout-btn">Odjava</a>
         </div>
     </header>
