@@ -7,117 +7,110 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_
     exit;
 }
 
-$fk_uporabnik = $_SESSION['user_id'];
+$user_id = $_SESSION['user_id'];
 $db = getDatabaseConnection(); 
 $napake = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-
-    $projekt_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-
-    if (!$projekt_id) {
-        $_SESSION['error_message'] = 'Neveljaven ID projekta za urejanje.';
-        header('Location: ../dashboard.php');
-        exit;
-    }
-
     try {
-        $sql = "SELECT id, imeProjekta, opis, jezik FROM projekt WHERE id = :projekt_id AND FKuporabnik = :fk_uporabnik";
+        $sql = "SELECT id, ime, priimek, gmail FROM uporabnik WHERE id = :user_id";
         
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(':projekt_id', $projekt_id, PDO::PARAM_INT);
-        $stmt->bindParam(':fk_uporabnik', $fk_uporabnik, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
         $stmt->execute();
         
-        $projekt = $stmt->fetch(PDO::FETCH_ASSOC);
+        $uporabnik = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$projekt) {
-            $_SESSION['error_message'] = 'Projekt ni najden ali nimate dovoljenja za urejanje.';
+        if (!$uporabnik) {
+            $_SESSION['error_message'] = 'Uporabnik ni najden.';
             header('Location: ../dashboard.php');
             exit;
         }
 
-        $_SESSION['edit_data'] = $projekt;
-
-        header("Location: ../updateProjectHTML.php");
+        $_SESSION['edit_profile_data'] = $uporabnik;
+        header("Location: ../updateProfileHTML.php");
         exit;
 
     } catch (PDOException $e) {
-        $_SESSION['error_message'] = "Napaka pri branju projekta: " . $e->getMessage();
+        $_SESSION['error_message'] = "Napaka pri branju profila: " . $e->getMessage();
         header('Location: ../dashboard.php');
         exit;
     }
 
+// POST METODA: Shranjevanje sprememb
 } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-   
-    $projekt_id = filter_input(INPUT_POST, 'projektId', FILTER_VALIDATE_INT);
     
-    if (!$projekt_id) {
-        $napake[] = 'Manjka ID projekta za posodobitev.';
-    }
+    $ime = trim($_POST['ime'] ?? '');
+    $priimek = trim($_POST['priimek'] ?? '');
+    $gmail = trim($_POST['gmail'] ?? '');
 
-    $ime_projekta = trim($_POST['imeProjekta'] ?? '');
-    $opis = trim($_POST['opis'] ?? '');
-    $jezik = trim($_POST['jezik'] ?? '');
-
-    if (empty($ime_projekta)) {
-        $napake[] = 'Ime projekta je obvezno.';
+    if (empty($ime)) {
+        $napake[] = 'Ime je obvezno.';
     }
-    if (strlen($ime_projekta) > 255) {
-        $napake[] = 'Ime projekta je predolgo.';
+    if (empty($priimek)) {
+        $napake[] = 'Priimek je obvezen.';
+    }
+    if (empty($gmail)) {
+        $napake[] = 'E-pošta je obvezna.';
+    } elseif (!filter_var($gmail, FILTER_VALIDATE_EMAIL)) {
+        $napake[] = 'Vnesite veljaven e-poštni naslov.';
     }
     
+    // Preverjanje, če e-pošta že obstaja pri drugem uporabniku
     if (empty($napake)) {
         try {
-            $sql_check = "SELECT id FROM projekt WHERE imeProjekta = :imeProjekta AND FKuporabnik = :fk_uporabnik AND id != :projekt_id";
+            $sql_check = "SELECT id FROM uporabnik WHERE gmail = :gmail AND id != :user_id";
             $stmt_check = $db->prepare($sql_check);
-            $stmt_check->bindParam(':imeProjekta', $ime_projekta, PDO::PARAM_STR);
-            $stmt_check->bindParam(':fk_uporabnik', $fk_uporabnik, PDO::PARAM_INT);
-            $stmt_check->bindParam(':projekt_id', $projekt_id, PDO::PARAM_INT);
+            $stmt_check->bindParam(':gmail', $gmail, PDO::PARAM_STR);
+            $stmt_check->bindParam(':user_id', $user_id, PDO::PARAM_INT);
             $stmt_check->execute();
+            
             if ($stmt_check->rowCount() > 0) {
-                 $napake[] = "Projekt z imenom '$ime_projekta' za vaš račun že obstaja. Prosimo, izberite drugo ime.";
+                 $napake[] = "E-poštni naslov '$gmail' že uporablja drug račun.";
             }
         } catch (PDOException $e) {
-            $napake[] = "Napaka pri preverjanju unikatnosti imena: " . $e->getMessage();
+            $napake[] = "Napaka pri preverjanju e-pošte: " . $e->getMessage();
         }
     }
 
+    // Če ni napak, posodobimo bazo
     if (empty($napake)) {
         try {
-            $sql = "UPDATE projekt SET imeProjekta = :imeProjekta, opis = :opis, jezik = :jezik, datumNastanka = NOW()
-                    WHERE id = :projekt_id AND FKuporabnik = :fk_uporabnik";
+            $sql = "UPDATE uporabnik SET ime = :ime, priimek = :priimek, gmail = :gmail 
+                    WHERE id = :user_id";
             
             $stmt = $db->prepare($sql);
-            
-            $stmt->bindParam(':imeProjekta', $ime_projekta, PDO::PARAM_STR);
-            $stmt->bindParam(':opis', $opis, PDO::PARAM_STR);
-            $stmt->bindParam(':jezik', $jezik, PDO::PARAM_STR);
-            $stmt->bindParam(':projekt_id', $projekt_id, PDO::PARAM_INT);
-            $stmt->bindParam(':fk_uporabnik', $fk_uporabnik, PDO::PARAM_INT);
+            $stmt->bindParam(':ime', $ime, PDO::PARAM_STR);
+            $stmt->bindParam(':priimek', $priimek, PDO::PARAM_STR);
+            $stmt->bindParam(':gmail', $gmail, PDO::PARAM_STR);
+            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
             
             $stmt->execute();
             
-            $_SESSION['success_message'] = "Projekt '$ime_projekta' je bil uspešno posodobljen.";
+            // Osvežimo sejne podatke, če jih uporabljaš v meniju
+            $_SESSION['ime'] = $ime;
+            $_SESSION['priimek'] = $priimek;
+            
+            $_SESSION['success_message'] = "Profil je bil uspešno posodobljen.";
             header("Location: ../dashboard.php");
             exit;
 
         } catch (PDOException $e) {
-            $napake[] = "Napaka pri posodabljanju projekta: " . $e->getMessage();
+            $napake[] = "Napaka pri posodabljanju profila: " . $e->getMessage();
         }
     }
 
+    // Če so napake, vrnemo na obrazec
     if (!empty($napake)) {
         $_SESSION['error_message'] = implode('<br>', $napake);
         
         $_SESSION['form_data'] = [
-            'imeProjekta' => $ime_projekta,
-            'opis' => $opis,
-            'jezik' => $jezik
+            'ime' => $ime,
+            'priimek' => $priimek,
+            'gmail' => $gmail
         ];
 
-        $redirect_url = "../updateProjectHTML.php?id=" . $projekt_id;
-        header("Location: " . $redirect_url);
+        header("Location: ../updateProfileHTML.php");
         exit;
     }
 

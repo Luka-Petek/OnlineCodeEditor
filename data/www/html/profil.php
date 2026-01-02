@@ -23,10 +23,10 @@ include 'php/userInfo.php';
     </header>
 
     <nav class="main-nav">
-            <ul>
-                <li><a class="nav-link" href="index.php">Nazaj</a></li>
-            </ul>
-        </nav>
+        <ul>
+            <li><a class="nav-link" href="index.php">Nazaj</a></li>
+        </ul>
+    </nav>
 
     <main class="container">
         <div class="profil">
@@ -66,7 +66,7 @@ include 'php/userInfo.php';
                 </div>
 
                 <div style="margin-top: 40px; display: flex; gap: 10px;">
-                    <button class="prijavaRegistracija">Uredi profil</button>
+                    <button class="prijavaRegistracija" onclick="redirectUserUpdate()">Uredi profil</button>
                     <button class="prijavaRegistracija" style="background: transparent; border: 1px solid var(--color-border);">Spremeni geslo</button>
                 </div>
             </section>
@@ -81,8 +81,11 @@ include 'php/userInfo.php';
 
     <script src="js/tema.js"></script>
     <script>
-        // Inicializacija ikon
         lucide.createIcons();
+
+        function redirectUserUpdate(){
+            window.location.href='updateProfileHTML.php';
+        }
     </script>
 </body>
 

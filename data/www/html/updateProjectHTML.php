@@ -1,17 +1,14 @@
 <?php
 session_start();
 
-// Preverjanje prijave
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     header("location: prijava.html");
     exit;
 }
 
-// Pridobivanje podatkov iz seje (ki jih je nastavil updateProject.php ob GET zahtevi)
 $projekt = $_SESSION['edit_data'] ?? null;
 $form_data = $_SESSION['form_data'] ?? null;
 
-// Če imamo napake pri prejšnjem poskusu shranjevanja, uporabimo tiste podatke
 $ime = htmlspecialchars($form_data['imeProjekta'] ?? $projekt['imeProjekta'] ?? '');
 $opis = htmlspecialchars($form_data['opis'] ?? $projekt['opis'] ?? '');
 $jezik = htmlspecialchars($form_data['jezik'] ?? $projekt['jezik'] ?? '');
@@ -118,10 +115,10 @@ $theme = $_COOKIE['theme'] ?? 'dark';
                     <textarea id="opis" name="opis"><?php echo $opis; ?></textarea>
                 </div>
 
-                <button type="submit" class="submit-btn">Shrani spremembe</button>
+                <button type="submit" class="submit-btn">SHRANI SPREMEMBE</button>
             </form>
 
-            <a href="dashboard.php" class="prijavaRegistracija">PREKLIČI IN NAZAJ</a>
+            <a href="profil.php" class="prijavaRegistracija">PREKLIČI IN NAZAJ</a>
         </div>
     </main>
 
