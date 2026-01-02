@@ -133,6 +133,15 @@ function getLangStyle($jezik) {
                                     <i class="fas fa-trash-alt trash-icon"></i>
                                     <span class="delete-text">Izbriši</span>
                                 </button>
+
+                                <button 
+                                    class="edit-btn-full" 
+                                    title="Uredi projekt: <?php echo htmlspecialchars($projekt['imeProjekta']); ?>"
+                                    onclick="potrdiUrejanje(<?php echo $projekt['id']; ?>, '<?php echo htmlspecialchars(addslashes($projekt['imeProjekta'])); ?>')"
+                                >
+                                    <i class="fas fa-edit edit-icon"></i>
+                                    <span class="edit-text">Uredi</span>
+                                </button>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -184,6 +193,10 @@ function getLangStyle($jezik) {
                 document.body.appendChild(form);
                 form.submit();
             }
+        }
+
+        function potrdiUrejanje(projektID, imeProjekta) {
+            window.location.href = `php/updateProject.php?id=${projektID}`;
         }
     </script>
 </body>

@@ -2,14 +2,13 @@
 session_start();
 require_once 'db.php';
 
-// Preveri avtentikacijo in obstoj user_id
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || !isset($_SESSION['user_id'])) {
     header('Location: ../prijava.html');
     exit;
 }
 
 $fk_uporabnik = $_SESSION['user_id'];
-$db = getDatabaseConnection(); // Simulirana funkcija za pridobitev DB povezave
+$db = getDatabaseConnection(); 
 $napake = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -40,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         $_SESSION['edit_data'] = $projekt;
 
-        header("Location: ../editProjectHTML.php");
+        header("Location: ../updateProjectHTML.php");
         exit;
 
     } catch (PDOException $e) {
@@ -49,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         exit;
     }
 
-} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+} else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    
     $projekt_id = filter_input(INPUT_POST, 'projektId', FILTER_VALIDATE_INT);
     
@@ -86,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     if (empty($napake)) {
         try {
-            $sql = "UPDATE projekt SET imeProjekta = :imeProjekta, opis = :opis, jezik = :jezik, datumSpremembe = NOW()
+            $sql = "UPDATE projekt SET imeProjekta = :imeProjekta, opis = :opis, jezik = :jezik, datumNastanka = NOW()
                     WHERE id = :projekt_id AND FKuporabnik = :fk_uporabnik";
             
             $stmt = $db->prepare($sql);
@@ -100,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $stmt->execute();
             
             $_SESSION['success_message'] = "Projekt '$ime_projekta' je bil uspešno posodobljen.";
-            header("Location: ../dashboard.php"); // Preusmeritev nazaj na armaturno ploščo
+            header("Location: ../dashboard.php");
             exit;
 
         } catch (PDOException $e) {
@@ -117,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'jezik' => $jezik
         ];
 
-        $redirect_url = "../editProjectHTML.php?id=" . $projekt_id;
+        $redirect_url = "../updateProjectHTML.php?id=" . $projekt_id;
         header("Location: " . $redirect_url);
         exit;
     }
