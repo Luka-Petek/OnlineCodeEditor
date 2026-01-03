@@ -70,8 +70,8 @@ include 'php/allLang.php';
             </section>
 
             <div style="margin-top: 40px; display: flex; gap: 10px;">
-                <button class="prijavaRegistracija" onclick="redirectUserUpdate()">Uredi profil</button>
-                <button class="prijavaRegistracija" style="background: transparent; border: 1px solid var(--color-border);">Spremeni geslo</button>
+                <a href="updateProfileHTML.php" class="prijavaRegistracija">Uredi profil</a>
+                <a href="updatePasswordHTML.php" class="prijavaRegistracija" style="background: transparent; border: 1px solid var(--color-border);">Spremeni geslo</a>
             </div>
         </div>
 
@@ -99,10 +99,7 @@ include 'php/allLang.php';
     <script>
         lucide.createIcons();
 
-        function redirectUserUpdate(){
-            window.location.href='updateProfileHTML.php';
-        }
-
+        //Chart.js dobi 2 tabelo: imena in vrednosti... prvi el. ima prvo vrednost, drugi drugo. itd..
         const ctx = document.getElementById('jezikChart');
         if (ctx) {
             new Chart(ctx, {

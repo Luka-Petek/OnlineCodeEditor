@@ -239,6 +239,11 @@ main {
     font-size: 16px;
 }
 
+.prijavaRegistracija:hover, .submit-btn:hover{
+    background-color: var(--color-primary-hover);
+    transform: scale(1.05);
+}
+
 .submit-btn {
     width: 100%;
     padding: 12px 20px;
