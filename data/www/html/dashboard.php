@@ -23,7 +23,7 @@ if (!$projekt) {
     exit;
 }
 
-// *** LOGIKA ZA NALAGANJE SHRANJENE KODE ***
+//shranjevanje kode
 require_once 'php/db.php';
 $db = getDatabaseConnection();
 
@@ -164,8 +164,8 @@ switch ($jezik) {
             <h2 class="console-header">Konzola / Izhod</h2>
 
             <pre id="output-container">
-// Tukaj bo prikazan izhod kode.
-Pritisnite "Zaženi Kodo" za simulacijo izvedbe.
+                // Tukaj bo prikazan izhod kode.
+                Pritisnite "Zaženi Kodo" za simulacijo izvedbe.
             </pre>
         </div>
     </main>
