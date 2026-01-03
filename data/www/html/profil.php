@@ -1,6 +1,7 @@
-<?php 
-include 'php/userInfo.php'; 
+<?php
+include 'php/allLang.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="sl">
 
@@ -11,6 +12,8 @@ include 'php/userInfo.php';
     <link rel="icon" type="image/png" href="pictures/icon.png">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- za graf -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -56,7 +59,7 @@ include 'php/userInfo.php';
 
                     <div class="podatki-vrstica">
                         <span class="podatki-label">Varnost</span>
-                        <span class="podatki-vrednost">Geslo je nastavljeno (shranjeno šifrirano)</span>
+                        <span class="podatki-vrednost">Geslo je nastavljeno</span>
                     </div>
 
                     <div class="podatki-vrstica">
@@ -64,13 +67,26 @@ include 'php/userInfo.php';
                         <span class="podatki-vrednost">#<?php echo htmlspecialchars($_SESSION["user_id"]); ?></span>
                     </div>
                 </div>
-
-                <div style="margin-top: 40px; display: flex; gap: 10px;">
-                    <button class="prijavaRegistracija" onclick="redirectUserUpdate()">Uredi profil</button>
-                    <button class="prijavaRegistracija" style="background: transparent; border: 1px solid var(--color-border);">Spremeni geslo</button>
-                </div>
             </section>
+
+            <div style="margin-top: 40px; display: flex; gap: 10px;">
+                <button class="prijavaRegistracija" onclick="redirectUserUpdate()">Uredi profil</button>
+                <button class="prijavaRegistracija" style="background: transparent; border: 1px solid var(--color-border);">Spremeni geslo</button>
+            </div>
         </div>
+
+        <section class="profil-graf-container">
+            <h2>Porazdelitev jezikov</h2>
+            <div class="chart-wrapper">
+                <?php if (!empty($jeziki_values)): ?>
+                    <canvas id="jezikChart"></canvas>
+                <?php else: ?>
+                    <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
+                        <p style="color: var(--color-text-subtle);">Ni podatkov za vizualizacijo.</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </section>
     </main>
 
     <footer>
@@ -85,6 +101,36 @@ include 'php/userInfo.php';
 
         function redirectUserUpdate(){
             window.location.href='updateProfileHTML.php';
+        }
+
+        const ctx = document.getElementById('jezikChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'doughnut', 
+                data: {
+                    labels: <?php echo json_encode($jeziki_labels); ?>,
+                    datasets: [{
+                        data: <?php echo json_encode($jeziki_values); ?>,
+                        backgroundColor: [
+                            '#4361ee', '#3a0ca3', '#7209b7', '#f72585', '#4cc9f0', '#4895ef'
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--color-text-subtle').trim() || '#666',
+                                font: { size: 12 }
+                            }
+                        }
+                    }
+                }
+            });
         }
     </script>
 </body>

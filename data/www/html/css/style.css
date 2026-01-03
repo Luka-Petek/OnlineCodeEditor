@@ -408,6 +408,23 @@ footer a {
     align-items: start;
 }
 
+.profil-graf-container {
+    max-width: 1000px;
+    margin: 20px auto 40px auto;
+    background-color: var(--color-bg-card);
+    padding: 40px;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    text-align: center;
+}
+
+.chart-wrapper {
+    position: relative;
+    margin: 0 auto;
+    height: 300px; /* Višina grafa */
+    width: 300px;  /* Širina grafa */
+}
+
 .profilna-slika {
     width: 180px;
     height: 180px;
