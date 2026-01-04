@@ -90,7 +90,7 @@ try {
     $container_name = "code-run-" . $projekt_id . '-' . time();
     $executor_image = "executor"; 
     
-    $docker_path = "/usr/bin/docker/docker"; 
+    $docker_path = "/usr/bin/docker"; 
     
     $abs_dir_path = realpath($dir_path);
     if (!$abs_dir_path) {
@@ -99,7 +99,7 @@ try {
 
     // Sestavljanje Docker ukaza
     $docker_ukaz = sprintf(
-        "export DOCKER_API_VERSION=1.44 && %s run --rm -v %s:/code --network none --memory 128m --cpus 0.5 --name %s --user root --workdir /code %s /bin/bash -c %s 2>&1",
+        "export DOCKER_API_VERSION=1.43 && %s run --rm -v %s:/code --network none --memory 128m --cpus 0.5 --name %s --user root --workdir /code %s /bin/bash -c %s 2>&1",
         $docker_path, 
         escapeshellarg($abs_dir_path), 
         escapeshellarg($container_name),

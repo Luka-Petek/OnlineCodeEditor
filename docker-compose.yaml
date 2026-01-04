@@ -1,24 +1,19 @@
-services:
+version: '3.8'
 
+services:
   spletni-streznik:
     build: 
       context: .
       dockerfile_inline: |
         FROM php:apache
         
-        # 1. Namestitev Docker CLI, Git in orodij za spremembo uporabnikov
+        # Namestitev Docker CLI (Popravljena pot, da je 'docker' neposredno v /usr/bin)
         RUN apt-get update && \
-            apt-get install -y git gettext && \
-            # Namestimo Docker CLI s curl 
-            curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-24.0.7.tgz | tar zx -C /usr/bin/ docker/docker && \
-
-            # Zagotovimo, da je binarna datoteka v lasti uporabnika www-data in ima dovoljenje 755 (rwxr-xr-x).
-            chown www-data:www-data /usr/bin/docker && \
-            chmod 755 /usr/bin/docker && \
+            apt-get install -y curl git && \
+            curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-24.0.7.tgz | tar zx -C /usr/bin/ --strip-components=1 docker/docker && \
+            chmod +x /usr/bin/docker && \
+            docker-php-ext-install pdo pdo_mysql && \
             rm -rf /var/lib/apt/lists/*
-            
-        # 2. Namestitev PHP razširitev
-        RUN docker-php-ext-install pdo pdo_mysql
 
     restart: unless-stopped
     ports:
@@ -26,29 +21,29 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./data/www:/var/www
-      
-    #dodajanje userja www-data k skupini root (GID 0) za dostop do socketa
+    user: root
+    # Dinamično dodajanje www-data v skupino, ki si lasti docker.sock na gostitelju
     command: >
       /bin/sh -c "
-        echo 'IZVEDBA POPRAVKA: Dodajanje www-data k skupini root (GID 0) IN Zagotovitev pravice do izvajanja binarne datoteke docker.';
-        
-        # Dodajanje uporabnika www-data k skupini root (za dostop do /var/run/docker.sock)
-        usermod -a -G root www-data;
-        
-        echo 'Članstvo skupine uporabnika www-data:';
-        id www-data;
-        
-        echo 'Dovoljenja binarne datoteke docker:';
-        ls -l /usr/bin/docker;
-
-        # Zaženemo glavni proces Apache
+        DOCKER_GID=$$(stat -c '%g' /var/run/docker.sock);
+        groupadd -g $$DOCKER_GID docker_host || true;
+        usermod -a -G docker_host www-data;
+        chown -R www-data:www-data /var/www;
         exec apache2-foreground
       "
-      
+    depends_on:
+      - executor-build
+
+  executor-build:
+    image: executor
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: ["echo", "Splošna slika 'executor' je pripravljena."]
+
   mysql:
     hostname: podatkovna-baza
     image: mysql:latest
-    restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=root
     volumes:
@@ -58,7 +53,6 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
-    restart: unless-stopped
     ports:
       - "8001:80"
     environment:
