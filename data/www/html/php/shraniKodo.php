@@ -37,9 +37,9 @@ try {
         'html' => 'html',
         default => 'txt',
     };
-    $imeDatoteke = "main." . $ekstenzija; 
+    $imeDatoteke = "Main." . $ekstenzija; 
     
-    $dir_osnova = '/var/www/user_files/'; 
+    $dir_osnova = '/var/www/html/user_files/'; 
     $dir_path = $dir_osnova . $fk_uporabnik . '/' . $projekt_id . '/';
     $full_file_path = $dir_path . $imeDatoteke;
     
