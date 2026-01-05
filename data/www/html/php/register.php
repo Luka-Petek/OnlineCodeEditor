@@ -82,7 +82,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
 
         } catch (\PDOException $e) {
-            // Če se vstavljanje v bazo ne posreči
             $final_error = "Nekaj je šlo narobe. Prosimo, poskusite znova pozneje. (SQL napaka: " . $e->getMessage() . ")";
              echo "<!DOCTYPE html><html lang='sl'><head><title>Napaka</title><style>body{font-family: sans-serif; background: #1f2937; color: white; padding: 20px;} h2{color:#f87171;}</style></head><body>";
              echo "<h2>Napaka pri registraciji</h2>";
@@ -91,7 +90,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
              echo "</body></html>";
         }
     } else {
-        // Prikaz vseh napak pri validaciji
         echo "<!DOCTYPE html><html lang='sl'><head><title>Napaka</title><style>body{font-family: sans-serif; background: #1f2937; color: white; padding: 20px;} h2{color:#f87171;}</style></head><body>";
         echo "<h2>Napaka pri registraciji</h2>";
         if (!empty($ime_err)) echo "<p style='color: #f87171;'>Ime: " . $ime_err . "</p>";
@@ -105,7 +103,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
 } else {
-    // Če stran pokličemo direktno, preusmerimo na obrazec
     header("location: ../registracija.html");
     exit();
 }

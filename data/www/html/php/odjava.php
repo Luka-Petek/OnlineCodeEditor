@@ -3,8 +3,6 @@
 session_start();
 $_SESSION = array();
 
-// Če je omogočeno uporabo sejnih piškotkov, uniči tudi piškotek seje.
-// Opomba: To bo delovalo le, če se piškotki ne pošljejo preden se izvede session_start().
 if (ini_get("session.use_cookies")) {
     $params = session_get_cookie_params();
     setcookie(session_name(), '', time() - 42000,

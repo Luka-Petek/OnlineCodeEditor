@@ -1,5 +1,4 @@
 <?php
-// Zaženi sejo (session) za shranjevanje uporabniških podatkov
 session_start();
 
 if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
@@ -66,7 +65,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<h2>Napaka pri prijavi</h2>";
         echo "<p style='color: #f87171;'>" . htmlspecialchars($login_err) . "</p>";
 
-        // Prikaz morebitnih napak pri validaciji
         if (!empty($gmail_err))
             echo "<p style='color: #f87171;'>E-pošta: " . $gmail_err . "</p>";
         if (!empty($geslo_err))
@@ -76,7 +74,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "</body></html>";
     }
 } else {
-    // Če stran pokličemo direktno, preusmerimo na obrazec
     header("location: ../prijava.html");
     exit();
 }
